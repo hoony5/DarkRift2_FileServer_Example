@@ -1,10 +1,8 @@
 ﻿[Serializable]
 [method:JsonConstructor]
-public class ResponsePartySearching(Party[] searchingPartyArray, ushort clientID) 
-    : ServerResponseModelBase(clientID)
+public class ResponsePartySearching(ushort clientID) : ServerResponseModelBase(clientID)
 {
-    [JsonProperty(nameof(SearchingPartyArray))] public Party[] SearchingPartyArray { get; private set; } 
-        = searchingPartyArray;
+    [JsonProperty(nameof(SearchingPartyArray))] public Party[] SearchingPartyArray { get; set; } 
 
     public override void Serialize(SerializeEvent e)
     {

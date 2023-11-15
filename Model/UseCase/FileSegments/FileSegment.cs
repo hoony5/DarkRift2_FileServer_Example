@@ -1,11 +1,12 @@
 ﻿[Serializable]
+[method: JsonConstructor]
 public class FileSegment
     (string fileNameWithoutExtension, string fileType, ByteArray partition)
     : IDarkRiftSerializable
 {
-    public string FileNameWithoutExtension { get; private set; } = fileNameWithoutExtension;
-    public string FileType { get; private set; } = fileType;
-    public ByteArray Partition { get; private set; } = partition;
+    [JsonProperty(nameof(FileNameWithoutExtension))] public string FileNameWithoutExtension { get; private set; } = fileNameWithoutExtension;
+    [JsonProperty(nameof(FileType))] public string FileType { get; private set; } = fileType;
+    [JsonProperty(nameof(Partition))] public ByteArray Partition { get; private set; } = partition;
 
     public FileSegment()
         : this(PreventExceptionStringValue, PreventExceptionStringValue, new ByteArray(0, System.Array.Empty<byte>()))

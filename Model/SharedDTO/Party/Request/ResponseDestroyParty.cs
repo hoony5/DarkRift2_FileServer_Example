@@ -1,8 +1,8 @@
 ﻿[Serializable]
 [method: JsonConstructor]
-public class ResponseDestroyParty(string partyName, ushort clientID) : ServerResponseModelBase(clientID)
+public class ResponseDestroyParty(ushort clientID) : ServerResponseModelBase(clientID)
 {
-    [JsonProperty(nameof(PartyName))] public string PartyName { get; private set; } = partyName;
+    [JsonProperty(nameof(PartyName))] public string PartyName { get; set; }
 
     public override void Serialize(SerializeEvent e)
     {

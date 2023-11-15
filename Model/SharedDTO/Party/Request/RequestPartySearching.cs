@@ -1,27 +1,33 @@
 ﻿[Serializable]
 [method:JsonConstructor]
-public class RequestPartySearching(ushort filterType, string searchResult, ushort senderClientID, string id)
+public class RequestPartySearching(string keyword, ushort senderClientID, string id)
     : ServerRequestModelBase(id)
 {
-    [JsonProperty(nameof(FilterType))]public ushort FilterType { get; private set; } = filterType;
-    [JsonProperty(nameof(SearchResult))]public string SearchResult { get; private set; } = searchResult;
+    [JsonProperty(nameof(Keyword))]public string Keyword { get; private set; } = keyword;
     [JsonProperty(nameof(SenderClientID))]public ushort SenderClientID { get; private set; } = senderClientID;
 
+    public RequestPartySearching()
+        : this(
+            PreventExceptionStringValue,
+            PreventExceptionNumericValue,
+            PreventExceptionStringValue)
+    {
+        
+    }
     public override void Serialize(SerializeEvent e)
     {
         base.Serialize(e);
 #if DEBUG
-        CheckValidationString(this, SearchResult);
+        CheckValidationString(this, Keyword);
 #endif
-        e.Writer.Write(FilterType);
-        e.Writer.Write(SearchResult);
+        e.Writer.Write(Keyword);
         e.Writer.Write(SenderClientID);
     }
 
     public override void Deserialize(DeserializeEvent e)
     {
-        FilterType = e.Reader.ReadUInt16();
-        SearchResult = e.Reader.ReadString();
+        base.Deserialize(e);
+        Keyword = e.Reader.ReadString();
         SenderClientID = e.Reader.ReadUInt16();
     }
 }

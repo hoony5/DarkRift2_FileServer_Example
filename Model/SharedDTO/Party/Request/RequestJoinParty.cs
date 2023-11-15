@@ -11,6 +11,15 @@ public class RequestJoinParty
     [JsonProperty(nameof(SenderClientID))]public ushort SenderClientID { get; private set; } 
         = senderClientID;
 
+    public RequestJoinParty()
+        : this(
+            new UserHeader(PreventExceptionStringValue),
+            PreventExceptionStringValue,
+            PreventExceptionNumericValue
+        )
+    {
+        
+    }
     public override void Serialize(SerializeEvent e)
     {
         base.Serialize(e);

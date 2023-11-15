@@ -1,13 +1,20 @@
 ﻿[Serializable]
 [method:JsonConstructor]
-public class RequestExitParty(UserHeader departedUser, string partyName)
+public class RequestExitParty(UserHeader departedUser, string partyName, ushort senderClientID)
     : ServerRequestModelBase(departedUser.AccountID)
 {
     [JsonProperty(nameof(DepartedUser))]public UserHeader DepartedUser { get; private set; } = departedUser;
     [JsonProperty(nameof(PartyName))]public string PartyName { get; private set; } = partyName;
+    [JsonProperty(nameof(SenderClientID))] public ushort SenderClientID { get; private set; } = senderClientID;
 
-    public ushort SenderClientID { get; set; }
-
+    public RequestExitParty()
+        : this(
+            new UserHeader(PreventExceptionStringValue),
+            PreventExceptionStringValue,
+            PreventExceptionNumericValue)
+    {
+        
+    }
     public override void Serialize(SerializeEvent e)
     {
         base.Serialize(e);

@@ -1,11 +1,9 @@
 ﻿[Serializable]
 [method: JsonConstructor]
-public class ResponseJoinPartyWithPassword
-    (UserHeader joinedUserInfo, Party joinedParty, ushort clientID) 
-    : ServerResponseModelBase(clientID)
+public class ResponseJoinPartyWithPassword(ushort clientID) : ServerResponseModelBase(clientID)
 {
-    [JsonProperty(nameof(JoinedUserInfo))] public UserHeader JoinedUserInfo { get; private set; } = joinedUserInfo;
-    [JsonProperty(nameof(JoinedParty))] public Party JoinedParty { get; private set; } = joinedParty;
+    [JsonProperty(nameof(JoinedUserInfo))] public UserHeader JoinedUserInfo { get; set; }
+    [JsonProperty(nameof(JoinedParty))] public Party JoinedParty { get; set; }
 
     public override void Serialize(SerializeEvent e)
     {

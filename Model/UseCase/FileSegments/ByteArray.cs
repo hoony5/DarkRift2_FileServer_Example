@@ -1,9 +1,10 @@
 
 [Serializable]
+[method: JsonConstructor]
 public class ByteArray(int index, byte[] bytes) : IDarkRiftSerializable
 {
-    public int Index { get; private set; } = index;
-    public byte[] Bytes { get; private set; } = bytes;
+    [JsonProperty(nameof(Index))]public int Index { get; private set; } = index;
+    [JsonProperty(nameof(Bytes))]public byte[] Bytes { get; private set; } = bytes;
 
     public ByteArray() : this(PreventExceptionNumericValue, PreventExceptionByteArray)
     {

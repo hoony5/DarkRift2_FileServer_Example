@@ -1,10 +1,9 @@
 ﻿[Serializable]
 [method:JsonConstructor]
-public class ResponseExitParty(UserHeader departedUser, string partyName, ushort clientID)
-    : ServerResponseModelBase(clientID)
+public class ResponseExitParty(ushort clientID) : ServerResponseModelBase(clientID)
 {
-    [JsonProperty(nameof(DepartedUser))]public UserHeader DepartedUser { get; private set; } = departedUser;
-    [JsonProperty(nameof(PartyName))]public string PartyName { get; private set; } = partyName;
+    [JsonProperty(nameof(DepartedUser))]public UserHeader DepartedUser { get; set; }
+    [JsonProperty(nameof(PartyName))]public string PartyName { get; set; }
 
     public override void Serialize(SerializeEvent e)
     {

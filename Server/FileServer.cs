@@ -1,7 +1,4 @@
-﻿
-namespace Server;
-
-public class FileServer : Plugin
+﻿public class FileServer : Plugin
 {
     public override Version Version { get; } = new Version(1, 0, 0);
     
@@ -11,6 +8,8 @@ public class FileServer : Plugin
     {
         ClientManager.ClientConnected += OnClientConnected;
         ClientManager.ClientDisconnected += OnClientDisconnected;
+        
+        _ = new DatabaseCenter();
         
         Logger.Info("FileServer Listening...");
     }
@@ -22,8 +21,7 @@ public class FileServer : Plugin
 
     private void OnMessageReceived(object? sender, MessageReceivedEventArgs e)
     {
-        ServerReader reader = new ServerReader(this);
-        e.Client.MessageReceived += reader.OnMessageReceived;
+        new ServerReader().OnMessageReceived(sender, e);
     }
 
     private void OnClientDisconnected(object? sender, ClientDisconnectedEventArgs e)
@@ -31,8 +29,10 @@ public class FileServer : Plugin
         e.Client.MessageReceived -= OnMessageReceived;
     }
     
-    public void DebugLog(string message, Exception? exception = null)
+    public static void DebugLog(string message)
     {
-        Logger.Info(message, exception);
+#if Debug
+        Debugger.Write("FileServer", message);
+#endif
     }
 }
