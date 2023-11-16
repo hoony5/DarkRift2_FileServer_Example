@@ -21,7 +21,10 @@
 
     private void OnMessageReceived(object? sender, MessageReceivedEventArgs e)
     {
+        // TODO :: Divide Some Logic EncryptedDto and NonEncryptedDto
         new ServerReader().OnMessageReceived(sender, e);
+
+        // new ServerEncryptedDtoReader().OnMessageReceived(sender, e);
     }
 
     private void OnClientDisconnected(object? sender, ClientDisconnectedEventArgs e)

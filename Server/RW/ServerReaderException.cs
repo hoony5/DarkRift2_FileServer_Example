@@ -1,1 +1,0 @@
-public class ServerReaderException(string message) : Exception(message);

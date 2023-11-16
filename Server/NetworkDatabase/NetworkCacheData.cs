@@ -27,7 +27,11 @@
             _cacheMap.Add(key, value);
             FileServer.DebugLog($"key: {key} | value : {nameof(TValue)} => Added.");
         }
-    } 
+    }
+    public bool ContainsKey(string key)
+    {
+        return _cacheMap.ContainsKey(key);
+    }
     public void Remove(string key)
     {
         if (!_cacheMap.ContainsKey(key))

@@ -1,1 +1,0 @@
-public class ServerWriterException(string message) : Exception(message);

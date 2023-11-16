@@ -1,10 +1,10 @@
 ﻿
 public class PartyFinder
 {
-    public void ProcessSearchingPartyListRequest(RequestPartySearching req, MessageReceivedEventArgs e)
+    public void ProcessSearchingPartyListRequest(RequestPartySearching? req, MessageReceivedEventArgs e)
     {
         ResponsePartySearching res = new ResponsePartySearching(e.Client.ID);
-        if (DatabaseCenter.Instance.GetDb().PartyMap.Count is 0)
+        if (DatabaseCenter.Instance.GetPartyDb().PartyMap.Count is 0)
         {
             res.SearchingPartyArray = new[] { new Party() };
             res.State = 0;
@@ -15,10 +15,10 @@ public class PartyFinder
         {
             res.SearchingPartyArray 
                 = !req.Keyword.Equals(PreventExceptionStringValue) ?
-                    DatabaseCenter.Instance.GetDb().PartyMap.Values
+                    DatabaseCenter.Instance.GetPartyDb().PartyMap.Values
                         .Where(party => party.Name.Contains(req.Keyword))
                         .ToArray() 
-                    : DatabaseCenter.Instance.GetDb().PartyMap.Values;
+                    : DatabaseCenter.Instance.GetPartyDb().PartyMap.Values;
             res.State = 1;
         }
         

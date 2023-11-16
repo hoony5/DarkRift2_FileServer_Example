@@ -7,16 +7,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Reference Include="DarkRift">
         <HintPath>..\FileServerConsole\DarkRift.dll</HintPath>
       </Reference>
       <Reference Include="DarkRift.Server">
         <HintPath>..\FileServerConsole\DarkRift.Server.dll</HintPath>
       </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     </ItemGroup>
 
 </Project>

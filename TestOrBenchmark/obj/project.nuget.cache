@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "g8DIU7a2PGwMd1oD0tpKTLNE5znTY62OHYynVI8GAEtN3FyiwHhJHR/McgD5MrQ+bIQmJVWq/+hrCxO+Q/knzQ==",
+  "dgSpecHash": "2V1ysBw7L6rEY/p/4l3KNNaxdbvEZxqGTK9719d3NafaVl59k0IKCgaz3x8BZDOdIL9r4SkgodSfzyboePbXgg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\power\\RiderProjects\\UnitsAbilitiesLogic\\FileServer\\TestOrBenchmark\\TestOrBenchmark.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\user\\Desktop\\MyWork\\DarkRift2_FileServer_Example\\TestOrBenchmark\\TestOrBenchmark.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\user\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
   "logs": []
 }

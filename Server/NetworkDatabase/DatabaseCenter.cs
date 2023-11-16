@@ -2,19 +2,26 @@
 {
     public static DatabaseCenter Instance => _instance;
     private static DatabaseCenter? _instance;
-    private NetworkDatabase? _cacheMap;
-    
+    private UserDatabase? _userCacheMap;
+    private PartyDatabase? _partyCacheMap;
+
     public DatabaseCenter(ushort capacity = 5)
     {
         if (_instance is not null) return;
         _instance = this;
-        _cacheMap = new NetworkDatabase(capacity);
+        _userCacheMap = new UserDatabase(capacity);
     }
     
-    public NetworkDatabase GetDb()
+    public UserDatabase GetUserDb()
     {
-        if (_cacheMap is null) return _cacheMap = new NetworkDatabase();
+        if (_userCacheMap is null) return _userCacheMap = new UserDatabase();
         
-        return _cacheMap;
+        return _userCacheMap;
+    }
+    public PartyDatabase GetPartyDb()
+    {
+        if (_partyCacheMap is null) return _partyCacheMap = new PartyDatabase();
+
+        return _partyCacheMap;
     }
 }

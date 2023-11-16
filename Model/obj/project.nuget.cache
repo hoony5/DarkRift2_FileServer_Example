@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "F2y3rJFpRePhX24bl2t5jNxjrCi5rbXCekeLkzCU/uOd+oK8FoCAxl7J4RjjIw473/pH/8UelxdH/ceNdEmm3Q==",
+  "dgSpecHash": "yuf2U+3fzYuoGtUvXwXJzUMQyRnYvgCHUJJ167dSLyrh1acRUBIega01kf8gCzylBhullNroYMuvmwp7IETCrg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\power\\RiderProjects\\UnitsAbilitiesLogic\\FileServer\\Model\\Model.csproj",
+  "projectFilePath": "C:\\Users\\user\\Desktop\\MyWork\\DarkRift2_FileServer_Example\\Model\\Model.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\power\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+    "C:\\Users\\user\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
   ],
   "logs": []
 }
