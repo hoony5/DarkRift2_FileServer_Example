@@ -2,79 +2,81 @@
 using System.Reflection;
 
 // rough code
-public class PDFConverter
+public class PDFConverter : IDisposable
 {
-  // For PDF file.
-        public Process officeToPDFConverter;
-        // public string converterConsolePath = @"D:\FileServerData\OfficeToPDFConverter\MSConverter.exe";
-        public ProcessStartInfo officeToPDFConverterStartInfo;
-
-        public string ConverterConsolePath()
+        private readonly Process? converter;
+        private readonly ProcessStartInfo? converterInfo;
+        private const string CONVERTER_PATH_HEADER = "converter";
+        private const string FILE_TYPE_SIGNATURE = "type";
+        private const string FILE_PATH_SIGNATURE = "path";
+        private const string SAVE_PATH_SIGNATURE = "save";
+        
+        private bool IsRunning => converter?.HasExited == false;
+        public PDFConverter()
         {
-            string path = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
-            path = Path.Combine(path, "Config","config.txt");
-            bool exists = File.Exists(path);
-            Console.WriteLine($"{(exists ? "Ok" : "Not Ok")} | {path}");
-            string pathMarker = "ConverterPath";
+            converterInfo = new ProcessStartInfo();
+            converterInfo.UseShellExecute = false;
+            converterInfo.CreateNoWindow = true;
+            converterInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            converterInfo.RedirectStandardInput = true;
+            converterInfo.FileName = GetConverterPath();
+            converter = Process.Start(converterInfo);
+        }
+        private string GetConverterPath()
+        {
+            string? path = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
+            if(path is null)
+            {
+                FileServer.DebugLog($"PDFConverter is null");
+                return PreventExceptionStringValue;
+            }
+            
+            path = Path.Combine(path, ConfigPath);
+            
             string converterPath = "";
             using (FileStream fs = new FileStream(path, FileMode.Open))
             {
-                string line;
+                string? line;
                 using (StreamReader reader = new StreamReader(fs))
                 {
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        string[] words = line.Split(':');
-                        string data = $"{words[1].Trim()}:{words[2].Trim()}";
-                        if (line.Contains(pathMarker))
-                        {
-                            converterPath = data;
-
-                            Console.WriteLine($"pathMarker _ converterPath : {converterPath}");
-                        }
-                    }
+                    string text = reader.ReadToEnd();
+                    string[] split = text.Split(DashSignature);
+                    converterPath 
+                        = new string(Array.Find(split,
+                                line => line
+                                    .Contains(CONVERTER_PATH_HEADER, StringComparison.OrdinalIgnoreCase))?
+                            .Split(EqualSignature)[CommandKeywordIndex]
+                            .Trim());
                 }
             }
 
             return converterPath;
         }
-        /// <summary>
-        /// return saveAsFilePath
-        /// </summary>
-        /// <param name="fileLoadingPath"></param>
-        /// <param name="saveAsFilePath"></param>
-        /// <returns></returns>
-        public void ConvertToPDF(Tag.FileType officeType, string fileLoadingPath, string saveAsFilePath)
+        public void Convert(string fileType, string fileFullName, string saveAs)
         {
-            RunConverter(officeType, fileLoadingPath, saveAsFilePath);
-        }
-
-        private void RunConverter(Tag.FileType officetype, string fileLoadingPath, string saveAsFilePath)
-        {
-            officeToPDFConverterStartInfo = new ProcessStartInfo();
-            officeToPDFConverterStartInfo.UseShellExecute = false;
-            officeToPDFConverterStartInfo.CreateNoWindow = true;
-            officeToPDFConverterStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            officeToPDFConverterStartInfo.RedirectStandardInput = true;
-            officeToPDFConverterStartInfo.FileName = ConverterConsolePath();
-            officeToPDFConverter = Process.Start(officeToPDFConverterStartInfo);
-
-            using (StreamWriter sw = officeToPDFConverter?.StandardInput)
+            if(!IsRunning)
             {
-                sw?.WriteLine("Start");
-                sw?.WriteLine("PDF");
-                sw?.WriteLine(officetype.ToString());
-                sw?.WriteLine(fileLoadingPath);
-                sw?.WriteLine(saveAsFilePath);
-                sw?.Dispose();
-                sw?.Close();
+                FileServer.DebugLog($"PDFConverter is not running");
+                return;
             }
-
+            
+            InputCommand(fileType, fileFullName, saveAs);
         }
-        public void KillConverter()
+
+        private void InputCommand(string fileType, string fileFullPath, string saveAs)
         {
-            officeToPDFConverter.Kill();
-            officeToPDFConverter.Dispose();
-            officeToPDFConverter.Close();
+            using (StreamWriter? sw = converter?.StandardInput)
+            {
+                string? consolePath = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
+                string finalPath = Path.Combine(consolePath, SharedFileFolderName, saveAs);
+                sw?.WriteLine
+                    ($"-{FILE_TYPE_SIGNATURE}={fileType} -{FILE_PATH_SIGNATURE}={fileFullPath} -{SAVE_PATH_SIGNATURE}={finalPath}");
+            }
+        }
+        public void Dispose()
+        {
+            converter?.Kill();
+            converter?.Dispose();
+            converter?.Close();
         }
 }

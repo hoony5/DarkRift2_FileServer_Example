@@ -1,8 +1,11 @@
-﻿public class DirectoryCreator
+﻿using System.Reflection;
+public class DirectoryCreator
 {
-    public void CreateDirectory(string newDirectory)
+    public void CreateDirectoryOnlyForParty(string key)
     {
-        if(!Directory.Exists(newDirectory))
-            Directory.CreateDirectory(newDirectory);
+        string? consolePath = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
+        string finalPath = Path.Combine(consolePath, SharedFileFolderName,key);
+        if (Directory.Exists(finalPath)) return;
+        Directory.CreateDirectory(finalPath);
     }
 }

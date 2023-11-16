@@ -13,16 +13,16 @@ public static class Debugger
         builder.Append("[");
         builder.Append(HEADER);
         builder.Append("]");
-        builder.Append(' ', TYPE_PAD - HEADER.Length - 2);
+        builder.Append(SpaceChar, TYPE_PAD - HEADER.Length - 2);
         builder.Append(sender);
-        builder.Append(' ', Math.Max(NAME_PAD - sender.Length, 1));
+        builder.Append(SpaceChar, Math.Max(NAME_PAD - sender.Length, 1));
 
-        string[] lines = message.Split('\n');
+        string[] lines = message.Split(LineSignature);
         builder.Append(lines[0]);
         for (int i = 1; i < lines.Length; i++)
         {
             builder.Append('\n');
-            builder.Append(' ', TYPE_PAD + NAME_PAD);
+            builder.Append(SpaceChar, TYPE_PAD + NAME_PAD);
             builder.Append(lines[i]);
         }
 

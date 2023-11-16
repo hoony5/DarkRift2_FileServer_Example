@@ -7,6 +7,8 @@ namespace Server.Security;
 
 internal static class ManagementAes
 {
+    private static string KeySignature => "Key";
+    private static string IVSignature => "Iv";
     // TODO :: Add access authority
     private static string SecurityConfigPath
     {
@@ -15,7 +17,7 @@ internal static class ManagementAes
             string? serverConsolePath = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
             if (string.IsNullOrEmpty(serverConsolePath)) return PreventExceptionStringValue;
 
-            return Path.Combine(serverConsolePath, "Config", "securityConfig.txt");
+            return Path.Combine(serverConsolePath, SecurityPath);
         }
     }
 
@@ -28,13 +30,13 @@ internal static class ManagementAes
                 using(StreamReader reader = new StreamReader(fs))
                 {
                     string text = reader.ReadToEnd();
-                    string[] lines = text.Split('\n');
+                    string[] lines = text.Split(LineSignature);
                     foreach (string line in lines)
                     {
-                        string[] split = line.Split(':');
-                        string header = split[0].Trim();
-                        if(!header.Contains("Key", StringComparison.OrdinalIgnoreCase))  continue;
-                        return split[1].Trim();
+                        string[] split = line.Split(ColonSignature);
+                        string header = split[HeaderIndex].Trim();
+                        if(!header.Contains(KeySignature, StringComparison.OrdinalIgnoreCase))  continue;
+                        return split[CommandKeywordIndex].Trim();
                     }
                 }
             }
@@ -52,13 +54,13 @@ internal static class ManagementAes
                 using(StreamReader reader = new StreamReader(fs))
                 {
                     string text = reader.ReadToEnd();
-                    string[] lines = text.Split('\n');
+                    string[] lines = text.Split(LineSignature);
                     foreach (string line in lines)
                     {
-                        string[] split = line.Split(':');
-                        string header = split[0].Trim();
-                        if(!header.Contains("IV", StringComparison.OrdinalIgnoreCase))  continue;
-                        return split[1].Trim();
+                        string[] split = line.Split(ColonSignature);
+                        string header = split[HeaderIndex].Trim();
+                        if(!header.Contains(IVSignature, StringComparison.OrdinalIgnoreCase))  continue;
+                        return split[CommandKeywordIndex].Trim();
                     }
                 }
             }
