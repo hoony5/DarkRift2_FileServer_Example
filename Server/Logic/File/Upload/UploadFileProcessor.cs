@@ -110,7 +110,7 @@
         res = new ResponseUploadFile(
             fileNameWithoutExtension: req.Segment.FileNameWithoutExtension,
             fileExtension: req.Segment.FileExtension,
-            uploadSegmentIndex: req.Segment.Partition.Index,
+            uploadSegmentIndex: req.Segment.Index,
             clientID: e.Client.ID);
         res.State = 1;
 

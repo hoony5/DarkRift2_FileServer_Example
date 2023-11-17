@@ -21,7 +21,7 @@ public class UploadedFileManagement(IDictionary<string, NetworkCacheData<FileSeg
         
         segmentsInfo?.SetFileBytes(req.Segment);
         
-        if (req.Segment.Partition.Index != FirstSegmentIndex) return true;
+        if (req.Segment.Index != FirstSegmentIndex) return true;
         segmentsInfo?.SetLastBytesLength(req.Segment);
         return true;
     }
@@ -75,7 +75,7 @@ public class UploadedFileManagement(IDictionary<string, NetworkCacheData<FileSeg
         List<byte> result = new List<byte>(infos.ByteTotalLength);
         foreach (FileSegment segment in infos.FileBytes)
         {
-            result.AddRange(segment.Partition.Bytes);
+            result.AddRange(segment.Bytes);
         }
 
         return result.ToArray();

@@ -2,7 +2,7 @@
 {
     private FileSegment[] _fileToBytesData = new FileSegment[segmentLength];
     public int SegmentLength { get; private set; } = segmentLength;
-    public int ByteTotalLength => _fileToBytesData.Sum(segment => segment.Partition.Bytes.Length);
+    public int ByteTotalLength => _fileToBytesData.Sum(segment => segment.Bytes.Length);
     public int LastTransactedSegmentIndex { get; private set; }
     public int Count { get; private set; }
     
@@ -14,9 +14,9 @@
         Array.Resize(ref _fileToBytesData, length);
     }
 
-    public void SetFileBytes(FileSegment data)
+    public void SetFileBytes(FileSegment segment)
     {
-        _fileToBytesData[data.Partition.Index] = data;
+        _fileToBytesData[segment.Index] = segment;
         Count++;
     }
     
@@ -30,12 +30,12 @@
         if (_fileToBytesData.Length == 0 || _fileToBytesData.Length <= otherIndex)
             return false;
 
-        return _fileToBytesData[otherIndex].Partition.Index == otherIndex;
+        return _fileToBytesData[otherIndex].Index == otherIndex;
     }
-    public void SetLastBytesLength(FileSegment data)
+    public void SetLastBytesLength(FileSegment segment)
     {
-        LastTransactedSegmentIndex = data.Partition.Index == SegmentLength - 1
-            ? data.Partition.Bytes.Length
-            : data.Partition.Index;
+        LastTransactedSegmentIndex = segment.Index == SegmentLength - 1
+            ? segment.Bytes.Length
+            : segment.Index;
     }
 }

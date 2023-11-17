@@ -1,15 +1,17 @@
 ﻿[Serializable]
 [method: JsonConstructor]
 public class FileSegment
-    (string fileNameWithoutExtension, string fileExtension, ByteArray partition)
+    (string fileNameWithoutExtension, string fileExtension, int index, byte[] bytes)
     : IDarkRiftSerializable
 {
     [JsonProperty(nameof(FileNameWithoutExtension))] public string FileNameWithoutExtension { get; private set; } = fileNameWithoutExtension;
     [JsonProperty(nameof(FileExtension))] public string FileExtension { get; private set; } = fileExtension;
-    [JsonProperty(nameof(Partition))] public ByteArray Partition { get; private set; } = partition;
+    
+    [JsonProperty(nameof(Index))]public int Index { get; private set; } = index;
+    [JsonProperty(nameof(Bytes))]public byte[] Bytes { get; private set; } = bytes;
 
     public FileSegment()
-        : this(StringNullValue, StringNullValue, new ByteArray(0, System.Array.Empty<byte>()))
+        : this(StringNullValue, StringNullValue, NumericNullValue, ByteNullArray)
     { }
     
     public void SetFileNameWithoutExtension(string fileNameWithoutExtension)
@@ -28,7 +30,8 @@ public class FileSegment
     {
         FileNameWithoutExtension = e.Reader.ReadString();
         FileExtension = e.Reader.ReadString();
-        Partition = e.Reader.ReadSerializable<ByteArray>();
+        Index = e.Reader.ReadInt32();
+        Bytes = e.Reader.ReadBytes();
     }
 
     public void Serialize(SerializeEvent e)
@@ -36,10 +39,9 @@ public class FileSegment
 #if DEBUG
         CheckValidationString(this, FileNameWithoutExtension);
         CheckValidationString(this, FileExtension);
-        CheckValidationProperty(this, Partition);
 #endif
         e.Writer.Write(FileNameWithoutExtension);
         e.Writer.Write(FileExtension);
-        e.Writer.Write(Partition);
+        e.Writer.Write(Index);
     }
 }
