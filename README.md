@@ -7,17 +7,21 @@ The Darkfit2 is copyrighted by DarkRiftNetworking. This is made .Net8.0 up for t
 
 ### Server
   -  Use AES256 Encryptor ( key & iv are loaded local txt File )
+  -  File Folder in the UploadPath on the console path.
   -  Divide Method SendEncryptedMessage and Send(Normal)Message
   -  Every party has a repository with its own party key. This repository contains files uploaded by that party member.
   -  Files are shared among people who share the same party key, including themselves.
+  
   -  R/W
-    -  ServerMessageReader / ServerEncryptedMessageReader
+    -  ServerMessageReader / ServerEncryptedMessageReader     
     -  ServerMessageWriter / ServerEncryptedMessageWriter
+  
   -  Party Logics
     -  Creation
     -  Join
     -  Exit/Remove/Destroy
     -  Finder  
+  
   -  File Logics
     -  Upload
     -  Download
