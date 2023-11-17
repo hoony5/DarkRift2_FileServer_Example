@@ -8,9 +8,9 @@ public class RequestPartySearching(string keyword, ushort senderClientID, string
 
     public RequestPartySearching()
         : this(
-            PreventExceptionStringValue,
-            PreventExceptionNumericValue,
-            PreventExceptionStringValue)
+            StringNullValue,
+            NumericNullValue,
+            StringNullValue)
     {
         
     }

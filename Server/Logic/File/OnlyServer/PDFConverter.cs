@@ -28,7 +28,7 @@ public class PDFConverter : IDisposable
             if(path is null)
             {
                 FileServer.DebugLog($"PDFConverter is null");
-                return PreventExceptionStringValue;
+                return StringNullValue;
             }
             
             path = Path.Combine(path, ConfigPath);
@@ -45,14 +45,14 @@ public class PDFConverter : IDisposable
                         = new string(Array.Find(split,
                                 line => line
                                     .Contains(CONVERTER_PATH_HEADER, StringComparison.OrdinalIgnoreCase))?
-                            .Split(EqualSignature)[CommandKeywordIndex]
-                            .Trim());
+                                    .Split(EqualSignature)[CommandKeywordIndex]
+                                    .Trim());
                 }
             }
 
             return converterPath;
         }
-        public void Convert(string fileType, string fileFullName, string saveAs)
+        public void Convert(string fileExtension, string officeFilePath, string saveAs)
         {
             if(!IsRunning)
             {
@@ -60,17 +60,17 @@ public class PDFConverter : IDisposable
                 return;
             }
             
-            InputCommand(fileType, fileFullName, saveAs);
+            InputCommand(fileExtension, officeFilePath, saveAs);
         }
 
-        private void InputCommand(string fileType, string fileFullPath, string saveAs)
+        private void InputCommand(string fileExtension, string fileFullPath, string saveAs)
         {
             using (StreamWriter? sw = converter?.StandardInput)
             {
                 string? consolePath = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
                 string finalPath = Path.Combine(consolePath, SharedFileFolderName, saveAs);
                 sw?.WriteLine
-                    ($"-{FILE_TYPE_SIGNATURE}={fileType} -{FILE_PATH_SIGNATURE}={fileFullPath} -{SAVE_PATH_SIGNATURE}={finalPath}");
+                    ($"-{FILE_TYPE_SIGNATURE}={fileExtension} -{FILE_PATH_SIGNATURE}={fileFullPath} -{SAVE_PATH_SIGNATURE}={finalPath}");
             }
         }
         public void Dispose()

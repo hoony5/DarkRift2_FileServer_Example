@@ -1,15 +1,15 @@
 ﻿[Serializable]
 [method: JsonConstructor]
-public class ResponseDownloadValidation(
+public class ResponseDownloadAccept(
         string fileNameWithoutExtension,
-        string fileType,
+        string fileExtension,
         int lastSegment,
         int lastSegmentLength,
         ushort clientID)
     : ServerResponseModelBase(clientID)
 {
     [JsonProperty(nameof(FileNameWithoutExtension))] public string FileNameWithoutExtension { get; private set; } = fileNameWithoutExtension;
-    [JsonProperty(nameof(FileType))] public string FileType { get; private set; } = fileType;
+    [JsonProperty(nameof(FileExtension))] public string FileExtension { get; private set; } = fileExtension;
     [JsonProperty(nameof(LastSegmentIndex))] public int LastSegmentIndex { get; private set; } = lastSegment;
     [JsonProperty(nameof(LastSegmentLength))] public int LastSegmentLength { get; private set; } = lastSegmentLength;
 
@@ -17,7 +17,7 @@ public class ResponseDownloadValidation(
     {
         base.Deserialize(e);
         FileNameWithoutExtension = e.Reader.ReadString();
-        FileType = e.Reader.ReadString();
+        FileExtension = e.Reader.ReadString();
         LastSegmentIndex = e.Reader.ReadInt32();
         LastSegmentLength = e.Reader.ReadInt32();
     }
@@ -27,11 +27,11 @@ public class ResponseDownloadValidation(
         base.Serialize(e);
 #if DEBUG
         CheckValidationString(this, FileNameWithoutExtension);
-        CheckValidationString(this, FileType);
+        CheckValidationString(this, FileExtension);
 #endif
         
         e.Writer.Write(FileNameWithoutExtension);
-        e.Writer.Write(FileType);
+        e.Writer.Write(FileExtension);
         e.Writer.Write(LastSegmentIndex);
         e.Writer.Write(LastSegmentLength);
     }

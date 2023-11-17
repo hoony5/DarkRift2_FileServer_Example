@@ -7,9 +7,9 @@ public class DownloadFileProcessor
             var currentPartyKey = GetPartyByClient(e.Client.ID).connectionKey;
             Console.WriteLine($"{e.Client is null} What is null req ? { req is null} | currentPartyKey ? {string.IsNullOrEmpty(currentPartyKey)}");
             var ret = new RequestDownloadFileResult();
-            Console.WriteLine($"Process Req DownloadFile :: {req.FileName} | {req.FileType}");
+            Console.WriteLine($"Process Req DownloadFile :: {req.FileName} | {req.FileExtension}");
             ret.FileName = req.FileName;
-            ret.FileType = req.FileType;
+            ret.FileExtension = req.FileExtension;
             ret.log = "Success";
             ret.isSuccess = currentPartyKey != "-1" && !string.IsNullOrEmpty(currentPartyKey) && !req.FileName.Contains("undecrypted_");
 
@@ -20,18 +20,18 @@ public class DownloadFileProcessor
                 return;
             }
 
-            var fileFullName = $"{ret.FileName}{Util.GetExtension(ret.FileType)}";
-            var downloadPath = Combine(FileDirectoryInfo.GetPathByFileType(req.FileType), currentPartyKey);
+            var fileFullName = $"{ret.FileName}{Util.GetExtension(ret.FileExtension)}";
+            var downloadPath = Combine(FileDirectoryInfo.GetPathByFileExtension(req.FileExtension), currentPartyKey);
             var finalPath = Combine(downloadPath
-                , req.FileType is Tag.FileType.Word
-                    or Tag.FileType.PPT
-                    or Tag.FileType.PDF
-                    or Tag.FileType.CSV ?
+                , req.FileExtension is Tag.FileExtension.Word
+                    or Tag.FileExtension.PPT
+                    or Tag.FileExtension.PDF
+                    or Tag.FileExtension.CSV ?
                     $"{req.FileName}.pdf" : fileFullName);
 
             Console.WriteLine($"finalPath : {finalPath}");
             FileSegmentsInfo fileSegment = null;
-            var needRequestReload = req.FileType is Tag.FileType.Word or Tag.FileType.PPT || FileLoader.ExistDownloadRecords(currentPartyKey, req.FileName, req.FileType);
+            var needRequestReload = req.FileExtension is Tag.FileExtension.Word or Tag.FileExtension.PPT || FileLoader.ExistDownloadRecords(currentPartyKey, req.FileName, req.FileExtension);
             if(needRequestReload)
             {
                 var existFileOnPath = Exists(finalPath);
@@ -40,7 +40,7 @@ public class DownloadFileProcessor
                 {
                     var fileBytes = ReadAllBytes(finalPath);
                     fileSegment =
-                        FileLoader.ProcessDownloadFile(currentPartyKey, req.FileName, req.FileType, fileBytes);
+                        FileLoader.ProcessDownloadFile(currentPartyKey, req.FileName, req.FileExtension, fileBytes);
                     Console.WriteLine($"fileSegment is null ? {fileSegment is null} | Count ? {fileSegment?.count}");
                 }
                 else
@@ -50,7 +50,7 @@ public class DownloadFileProcessor
                 }
             }
             else
-                fileSegment = FileLoader.GetDownloadRecord(currentPartyKey, req.FileName, req.FileType);
+                fileSegment = FileLoader.GetDownloadRecord(currentPartyKey, req.FileName, req.FileExtension);
 
             FileServerPlugin.Debug($" last length - {fileSegment?.lastBytesLength} | index - {fileSegment?.dataTotalLength - 1}");
             ret.LastDataBytesLength = fileSegment.lastBytesLength;
@@ -95,11 +95,11 @@ public class DownloadFileProcessor
             ret.log = "Success !!\n";
 
             FileSegment[] fileSegments;
-            var existDownloadRecord = FileLoader.ExistDownloadRecords(currentPartyKey, req.FileName, req.FileType);
-            FileServerPlugin.Debug($"Reqest Download :: {req.FileName}{req.FileType}");
+            var existDownloadRecord = FileLoader.ExistDownloadRecords(currentPartyKey, req.FileName, req.FileExtension);
+            FileServerPlugin.Debug($"Reqest Download :: {req.FileName}{req.FileExtension}");
             if (existDownloadRecord)
             {
-                fileSegments =  FileLoader.GetDownloadRecord(currentPartyKey, req.FileName, req.FileType).fileToBytesData;
+                fileSegments =  FileLoader.GetDownloadRecord(currentPartyKey, req.FileName, req.FileExtension).fileToBytesData;
 
                 if (fileSegments.Length == 0)
                 {

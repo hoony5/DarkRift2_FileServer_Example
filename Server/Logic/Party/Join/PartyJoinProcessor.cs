@@ -8,7 +8,7 @@
         {
             res.State = 0;
             res.Log = $"There is no party named {req.PartyName}";
-            new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_JOIN_PARTY);
+            _ = new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_JOIN_PARTY);
             return;
         }
 
@@ -16,7 +16,7 @@
         {
             res.State = 0;
             res.Log = $"There is no Value. => key: {req.PartyName}";
-            new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_JOIN_PARTY_WITH_PASSWORD);
+            _ = new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_JOIN_PARTY_WITH_PASSWORD);
             return;
         }
         
@@ -32,7 +32,7 @@
         
         DatabaseCenter.Instance.GetUserDb().UserHeaderMap.AddOrUpdate(res.JoinedUserInfo.AccountID, res.JoinedUserInfo);
         
-        new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_JOIN_PARTY);
+        _ = new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_JOIN_PARTY);
 
         FileServer.DebugLog($@"
 [Joined Party :{(res.State == 1 ? "Success" : "Fail")}]

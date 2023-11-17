@@ -1,7 +1,9 @@
-﻿public class NetworkCacheData<TValue>(ushort capacity)
+﻿using System.Collections.Concurrent;
+
+public class NetworkCacheData<TValue>(ushort capacity = 100)
 {
-    private readonly Dictionary<string, TValue> _cacheMap 
-        = new Dictionary<string, TValue>(capacity);
+    private readonly ConcurrentDictionary<string, TValue> _cacheMap 
+        = new ConcurrentDictionary<string, TValue>(ConcurrencyLevel, capacity);
 
     public bool TryGetValue(string key, out TValue? value)
     {
@@ -17,14 +19,14 @@
     public TValue[] Values => _cacheMap.Values.ToArray();
     public void AddOrUpdate(string key, TValue value)
     {
-        if (_cacheMap.ContainsKey(key))
+        if (_cacheMap.TryGetValue(key, out TValue? comparisonValue))
         {
-            _cacheMap[key] = value;
+            _cacheMap.TryUpdate(key, value, comparisonValue);
             FileServer.DebugLog($"key: {key} | value : {nameof(TValue)} => Updated.");
         }
         else
         {
-            _cacheMap.Add(key, value);
+            _cacheMap.TryAdd(key, value);
             FileServer.DebugLog($"key: {key} | value : {nameof(TValue)} => Added.");
         }
     }
@@ -39,7 +41,7 @@
             FileServer.DebugLog($"key: {key} => Already Removed.");
             return;
         }
-        _cacheMap.Remove(key);
+        _ = _cacheMap.TryRemove(key, out _);
         FileServer.DebugLog($"key: {key} => Removed.");
     }
     

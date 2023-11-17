@@ -24,7 +24,7 @@ public class ServerEncryptedDtoReader
                     case Tags.REQUEST_CREATE_PARTY:
                         new PartyCreator().ProcessCreatePartyRequest(encryptedData.AesDecrypt<RequestCreateParty>(), e);
                         break;
-                    case Tags.REQUSET_PARTY_LIST:
+                    case Tags.REQUEST_PARTY_LIST:
                         new PartyFinder().ProcessSearchingPartyListRequest(
                             encryptedData.AesDecrypt<RequestPartySearching>(), e);
                         break;
@@ -32,15 +32,15 @@ public class ServerEncryptedDtoReader
                         new PartyJoinProcessor().ProcessJoinPartyRequest(encryptedData.AesDecrypt<RequestJoinParty>(),
                             e);
                         break;
-                    case Tags.REQUSET_JOIN_PARTY_WITH_PASSWORD:
+                    case Tags.REQUEST_JOIN_PARTY_WITH_PASSWORD:
                         new PartyJoinWithPasswordProcessor().ProcessJoinPartyWithPasswordRequest(
                             encryptedData.AesDecrypt<RequestJoinPartyWithPassword>(), e);
                         break;
-                    case Tags.REQUSET_EXIT_PARTY:
+                    case Tags.REQUEST_EXIT_PARTY:
                         new ExitPartyProcessor().ProcessExitPartyRequest(
                             encryptedData.AesDecrypt<RequestExitParty>(), e);
                         break;
-                    case Tags.REQUSET_REMOVE_MEMBER:
+                    case Tags.REQUEST_REMOVE_MEMBER:
                         new RemoveMemberProcessor().ProcessRemoveMemberRequest(
                             encryptedData.AesDecrypt<RequestRemoveMember>(), e);
                         break;
@@ -53,7 +53,7 @@ public class ServerEncryptedDtoReader
 
                     #region Processing Upload File
 
-                    case Tags.REQUEST_UPLOAD_VALIDATION:
+                    case Tags.REQUEST_UPLOAD_ACCEPT:
                         break;
                     case Tags.REQUEST_UPLOAD_FILE:
                         break;
@@ -62,7 +62,7 @@ public class ServerEncryptedDtoReader
 
                     #region Processing Download File
 
-                    case Tags.REQUEST_DOWNLOAD_VALIDATION:
+                    case Tags.REQUEST_DOWNLOAD_ACCEPT:
                         break;
                     case Tags.REQUEST_DOWNLOAD_FILE:
                         break;
@@ -72,8 +72,6 @@ public class ServerEncryptedDtoReader
                     #region Processing Search File
 
                     case Tags.REQUEST_FILE_SEARCHING:
-                        break;
-                    case Tags.REQUEST_CHECK_FILE_EXIST:
                         break;
 
                     #endregion

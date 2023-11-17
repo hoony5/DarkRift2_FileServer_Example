@@ -8,11 +8,11 @@
         {
             res.State = 0;
             res.Log = $"There is no party named {res.PartyName}";
-            new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_DESTROY_PARTY);
+            _ = new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_DESTROY_PARTY);
             return;
         }
         
-        party.Leader.PartyKey = PreventExceptionStringValue;
+        party.Leader.PartyKey = StringNullValue;
         _ = DatabaseCenter.Instance.GetUserDb().UserHeaderMap.TryGetValue(party.Leader.AccountID, out UserHeader? leader);
         
         if(leader is null)
@@ -22,24 +22,24 @@
             return;
         }
         
-        leader.PartyKey = PreventExceptionStringValue;
+        leader.PartyKey = StringNullValue;
         
         res.State = 1;
         res.PartyName = req.PartyName;
         if(party.Members.Count is 0)
         {
-            new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_DESTROY_PARTY);
+            _ = new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_DESTROY_PARTY);
             return;
         }
         foreach (KeyValuePair<string, UserHeader> member in party.Members)
         {
-            member.Value.PartyKey = PreventExceptionStringValue;
+            member.Value.PartyKey = StringNullValue;
             _ = DatabaseCenter.Instance.GetUserDb().UserHeaderMap.TryGetValue(member.Value.AccountID, out UserHeader? memberInfo);
             if(memberInfo is null) continue;
-            memberInfo.PartyKey = PreventExceptionStringValue;
+            memberInfo.PartyKey = StringNullValue;
         }
         
-        new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_DESTROY_PARTY);
+        _ = new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_DESTROY_PARTY);
         FileServer.DebugLog($@"
 [Destroy Party]
     - Leader              : {party?.Leader.AccountID}");

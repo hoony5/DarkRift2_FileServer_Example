@@ -9,9 +9,9 @@ public class RequestExitParty(UserHeader departedUser, string partyName, ushort 
 
     public RequestExitParty()
         : this(
-            new UserHeader(PreventExceptionStringValue),
-            PreventExceptionStringValue,
-            PreventExceptionNumericValue)
+            new UserHeader(StringNullValue),
+            StringNullValue,
+            NumericNullValue)
     {
         
     }

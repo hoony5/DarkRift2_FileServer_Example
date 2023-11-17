@@ -1,18 +1,18 @@
 ﻿[Serializable]
 [method:JsonConstructor]
 public class RequestDownloadFile
-    (int fileSegmentIndex, string fileNameWithoutExtension, string fileType, string id)
+    (int fileSegmentIndex, string fileNameWithoutExtension, string fileExtension, string id)
     : ServerRequestModelBase(id)
 {
     [JsonProperty(nameof(FileSegmentIndex))] public int FileSegmentIndex { get; private set; } = fileSegmentIndex;
     [JsonProperty(nameof(FileNameWithoutExtension))] public string FileNameWithoutExtension { get; private set; } = fileNameWithoutExtension;
-    [JsonProperty(nameof(FileType))] public string FileType { get; private set; } = fileType;
+    [JsonProperty(nameof(FileExtension))] public string FileExtension { get; private set; } = fileExtension;
     
     public override void Deserialize(DeserializeEvent e)
     {
         base.Deserialize(e);
         FileNameWithoutExtension = e.Reader.ReadString();
-        FileType = e.Reader.ReadString();
+        FileExtension = e.Reader.ReadString();
         FileSegmentIndex = e.Reader.ReadInt32();
     }
 
@@ -21,10 +21,10 @@ public class RequestDownloadFile
         base.Serialize(e);
 #if DEBUG
         CheckValidationString(this, FileNameWithoutExtension);
-        CheckValidationString(this, FileType);
+        CheckValidationString(this, FileExtension);
 #endif
         e.Writer.Write(FileNameWithoutExtension);
-        e.Writer.Write(FileType);
+        e.Writer.Write(FileExtension);
         e.Writer.Write(FileSegmentIndex);
     }
 }

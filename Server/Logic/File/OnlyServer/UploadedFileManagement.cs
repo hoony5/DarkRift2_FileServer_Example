@@ -1,93 +1,84 @@
 ﻿
 // rough code
-public class UploadedFileManagement
+public class UploadedFileManagement(IDictionary<string, NetworkCacheData<FileSegmentsInfo>> uploadedFiles)
 {
-    private readonly Dictionary<string, NetworkCacheData<FileSegmentsInfo>> _uploadedFiles;
-
-    public void AddUploadList(string partyKey,string fileName, int fileBytesLength)
+    private readonly int FirstSegmentIndex = 0;
+    public void AddPartyUploadFileInfo(string partyKey,string fileName, int segmentsLength)
     {
-        if (!_uploadedFiles.ContainsKey(partyKey))
-            _uploadedFiles.Add(partyKey, new Dictionary<string, FileSegmentsInfo>(0));
+        // if there is no repository for partyKey, create it.
+        if (!uploadedFiles.TryGetValue(partyKey, out NetworkCacheData<FileSegmentsInfo>? value))
+        {
+            value = new NetworkCacheData<FileSegmentsInfo>();
+            uploadedFiles.Add(partyKey, value);
+        }
 
-        if(!_uploadedFiles[partyKey].ContainsKey(fileName))
-            _uploadedFiles[partyKey].Add(fileName, new FileSegmentsInfo(fileBytesLength));
-
-        _uploadedFiles[partyKey][fileName] = new FileSegmentsInfo(fileBytesLength);
+        value.AddOrUpdate(fileName, new FileSegmentsInfo(segmentsLength));
     }
 
-    public bool UpdateUploadFileList(string partyKey,string fileName, RequestUploadFile req)
+    public bool UpdateUploadFileData(string partyKey,string fileName, RequestUploadFile req)
     {
-        if (!_uploadedFiles.ContainsKey(partyKey)) return false;
-        if (!_uploadedFiles[partyKey].ContainsKey(fileName)) return false;
-
-        if (req.Data.byteArray.index == 0)
-            _uploadedFiles[partyKey][fileName] = _uploadedFiles[partyKey][fileName].SetFileBytes(req.Data)
-                .SetLastBytesLength(req.Data);
-        else
-            _uploadedFiles[partyKey][fileName] = _uploadedFiles[partyKey][fileName].SetFileBytes(req.Data);
+        if (!uploadedFiles[partyKey].TryGetValue(fileName, out FileSegmentsInfo? segmentsInfo)) return false;
+        
+        segmentsInfo?.SetFileBytes(req.Segment);
+        
+        if (req.Segment.Partition.Index != FirstSegmentIndex) return true;
+        segmentsInfo?.SetLastBytesLength(req.Segment);
         return true;
     }
-    public FileSegmentsInfo GetUploadFileSegment(string partyKey, string fileName)
+    
+    public bool TryGetSegmentsInfo(string partyKey, string fileName, out FileSegmentsInfo? segmentsInfo)
     {
-        if (!_uploadedFiles.ContainsKey(partyKey) || !_uploadedFiles[partyKey].ContainsKey(fileName)) return new FileSegmentsInfo();
-
-        return _uploadedFiles[partyKey].ContainsKey(fileName) ? _uploadedFiles[partyKey][fileName] : new FileSegmentsInfo();
+        segmentsInfo = null;
+        return uploadedFiles.TryGetValue(partyKey, out NetworkCacheData<FileSegmentsInfo>? value) &&
+               value.TryGetValue(fileName, out segmentsInfo);
     }
-    public void CopyUploadToDownload(string partyKey, string fileName)
+    public void CopyToDownloadFileMap(IDictionary<string, NetworkCacheData<FileSegmentsInfo>> downloadFiles,
+            string partyKey,
+            string fileName)
     {
-        if (!_uploadedFiles.ContainsKey(partyKey)) return;
+        if (!uploadedFiles.ContainsKey(partyKey)) return;
+        if(!uploadedFiles[partyKey].ContainsKey(fileName)) return;
 
-        if(!_uploadedFiles[partyKey].ContainsKey(fileName)) return;
+        // if there is no repository for partyKey, create it.
+        if(!downloadFiles.TryGetValue(partyKey, out NetworkCacheData<FileSegmentsInfo>? value))
+        {
+            value = new NetworkCacheData<FileSegmentsInfo>();
+            downloadFiles.Add(partyKey, value);
+        }
 
-        if(!downloadFiles.ContainsKey(partyKey))
-            downloadFiles.Add(partyKey, new Dictionary<string, FileSegmentsInfo>(0));
+        // if there is no repository for fileName, create it.
+        if(!value.ContainsKey(fileName))
+        {
+            value.AddOrUpdate(fileName, new FileSegmentsInfo());
+        }
 
-        if(!downloadFiles[partyKey].ContainsKey(fileName))
-            downloadFiles[partyKey].Add(fileName, new FileSegmentsInfo(0));
-
-        _uploadedFiles[partyKey][fileName].count = 0;
-        downloadFiles[partyKey][fileName] = _uploadedFiles[partyKey][fileName];
+        if (!uploadedFiles[partyKey].TryGetValue(fileName, out FileSegmentsInfo? segmentsInfo)) return;
+        // copy
+        value.AddOrUpdate(fileName, segmentsInfo);
     }
+    
     private void RemoveUploadFiles(string partyKey)
     {
-        if (!_uploadedFiles.ContainsKey(partyKey)) return;
-        _uploadedFiles.Remove(partyKey);
+        if (!uploadedFiles.ContainsKey(partyKey)) return;
+        uploadedFiles.Remove(partyKey);
     }
-
-    public void RemoveFiles(LoadType type, string partyKey)
+    
+    public byte[] GetUploadedFile(string partyKey, string fileName)
     {
-        switch (type)
+        if (!uploadedFiles.TryGetValue(partyKey, out NetworkCacheData<FileSegmentsInfo>? cached))
         {
-            case LoadType.Upload:
-                RemoveUploadFiles(partyKey);
-                break;
-            case LoadType.Download:
-                RemoveDownloadFiles(partyKey);
-
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(type), type, null);
-        }
-    }
-    public (string fileFullName,byte[] datas) GetUploadedFileBytes(string partyKey, string fileName)
-    {
-        if(!_uploadedFiles.ContainsKey(partyKey))
-            _uploadedFiles.Add(partyKey , new Dictionary<string, FileSegmentsInfo>(0));
-
-        if(!_uploadedFiles[partyKey].ContainsKey(fileName))
-            _uploadedFiles[partyKey].Add(fileName, new FileSegmentsInfo(0));
-
-        var infos = _uploadedFiles[partyKey][fileName];
-
-        var byteList = new List<byte>(0);
-
-        foreach (var item in infos.fileToBytesData)
-        {
-            FileServerPlugin.Debug($"item {item.byteArray.index} - is added.");
-            byteList.AddRange(item.byteArray.bytes);
+              return ByteNullArray;   
         }
 
-        return (fileName, byteList.ToArray());
+        if (!cached.TryGetValue(fileName, out FileSegmentsInfo? infos)) return ByteNullArray;
+        
+        List<byte> result = new List<byte>(infos.ByteTotalLength);
+        foreach (FileSegment segment in infos.FileBytes)
+        {
+            result.AddRange(segment.Partition.Bytes);
+        }
+
+        return result.ToArray();
     }
 
 }

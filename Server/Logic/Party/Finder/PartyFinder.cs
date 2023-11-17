@@ -14,7 +14,7 @@ public class PartyFinder
         else
         {
             res.SearchingPartyArray 
-                = !req.Keyword.Equals(PreventExceptionStringValue) ?
+                = !req.Keyword.Equals(StringNullValue) ?
                     DatabaseCenter.Instance.GetPartyDb().PartyMap.Values
                         .Where(party => party.Name.Contains(req.Keyword))
                         .ToArray() 
@@ -22,6 +22,6 @@ public class PartyFinder
             res.State = 1;
         }
         
-        new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_PARTY_LIST);
+        _ = new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_PARTY_LIST);
     }
 }

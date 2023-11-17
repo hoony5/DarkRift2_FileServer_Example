@@ -14,19 +14,19 @@ public class ServerReader
                     case Tags.REQUEST_CREATE_PARTY:
                         new PartyCreator().ProcessCreatePartyRequest(reader.ReadSerializable<RequestCreateParty>(), e);
                         break;
-                    case Tags.REQUSET_PARTY_LIST:
+                    case Tags.REQUEST_PARTY_LIST:
                         new PartyFinder().ProcessSearchingPartyListRequest(reader.ReadSerializable<RequestPartySearching>(), e);
                         break;
                     case Tags.REQUEST_JOIN_PARTY:
                         new PartyJoinProcessor().ProcessJoinPartyRequest(reader.ReadSerializable<RequestJoinParty>(), e);
                         break;
-                    case Tags.REQUSET_JOIN_PARTY_WITH_PASSWORD:
+                    case Tags.REQUEST_JOIN_PARTY_WITH_PASSWORD:
                         new PartyJoinWithPasswordProcessor().ProcessJoinPartyWithPasswordRequest(reader.ReadSerializable<RequestJoinPartyWithPassword>(), e);
                         break;
-                    case Tags.REQUSET_EXIT_PARTY:
+                    case Tags.REQUEST_EXIT_PARTY:
                         new ExitPartyProcessor().ProcessExitPartyRequest(reader.ReadSerializable<RequestExitParty>(), e);
                         break;
-                    case Tags.REQUSET_REMOVE_MEMBER:
+                    case Tags.REQUEST_REMOVE_MEMBER:
                         new RemoveMemberProcessor().ProcessRemoveMemberRequest(reader.ReadSerializable<RequestRemoveMember>(), e);
                         break;
                     case Tags.REQUEST_DESTROY_PARTY:
@@ -35,14 +35,14 @@ public class ServerReader
                     #endregion
 
                     #region Processing Upload File
-                    case Tags.REQUEST_UPLOAD_VALIDATION:
+                    case Tags.REQUEST_UPLOAD_ACCEPT:
                         break;
                     case Tags.REQUEST_UPLOAD_FILE:
                         break;
                     #endregion
 
                     #region Processing Download File
-                    case Tags.REQUEST_DOWNLOAD_VALIDATION:
+                    case Tags.REQUEST_DOWNLOAD_ACCEPT:
                         break;
                     case Tags.REQUEST_DOWNLOAD_FILE:
                         break;
@@ -50,8 +50,6 @@ public class ServerReader
 
                     #region Processing Search File
                     case Tags.REQUEST_FILE_SEARCHING:
-                        break;
-                    case Tags.REQUEST_CHECK_FILE_EXIST:
                         break;
                     #endregion
 

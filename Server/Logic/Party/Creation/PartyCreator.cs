@@ -23,7 +23,7 @@
         // Reply
         ResponseCreateParty res = new ResponseCreateParty(createdParty, e.Client.ID);
         res.State = 1;
-        new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_CREATE_PARTY);
+        _ = new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_CREATE_PARTY);
         
         // Log
         FileServer.DebugLog($@"

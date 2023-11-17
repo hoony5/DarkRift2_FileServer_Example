@@ -1,9 +1,9 @@
 ﻿[Serializable]
 [method:JsonConstructor]
-public class RequestAdvertiseUploadCompletion(string fileFullName, string id)
+public class RequestAdvertiseUploadCompletion(string fileName, string id)
     : ServerRequestModelBase(id)
 {
-    [JsonProperty(nameof(FileFullName))] public string FileFullName { get; private set; } = fileFullName;
+    [JsonProperty(nameof(FileFullName))] public string FileFullName { get; private set; } = fileName;
     public override void Deserialize(DeserializeEvent e)
     {
         base.Deserialize(e);

@@ -1,16 +1,16 @@
 ﻿[Serializable]
 [method:JsonConstructor]
-public class RequestDownloadValidation(string fileNameWithoutExtension, string fileType, string id)
+public class RequestDownloadAccept(string fileNameWithoutExtension, string fileExtension, string id)
     : ServerRequestModelBase(id)
 {
     [JsonProperty(nameof(FileNameWithoutExtension))]public string FileNameWithoutExtension { get; private set; } = fileNameWithoutExtension;
-    [JsonProperty(nameof(FileType))]public string FileType { get; private set; } = fileType;
+    [JsonProperty(nameof(FileExtension))]public string FileExtension { get; private set; } = fileExtension;
 
     public override void Deserialize(DeserializeEvent e)
     {
         base.Deserialize(e);
         FileNameWithoutExtension = e.Reader.ReadString();
-        FileType = e.Reader.ReadString();
+        FileExtension = e.Reader.ReadString();
     }
 
     public override void Serialize(SerializeEvent e)
@@ -18,9 +18,9 @@ public class RequestDownloadValidation(string fileNameWithoutExtension, string f
         base.Serialize(e);
 #if DEBUG
         CheckValidationString(this, FileNameWithoutExtension);
-        CheckValidationString(this, FileType);
+        CheckValidationString(this, FileExtension);
 #endif
         e.Writer.Write(FileNameWithoutExtension);
-        e.Writer.Write(FileType);
+        e.Writer.Write(FileExtension);
     }
 }

@@ -1,17 +1,16 @@
-﻿public class FileSegmentsInfo(int length = 100)
+﻿public class FileSegmentsInfo(int segmentLength = 100)
 {
-    private FileSegment[] _fileToBytesData = new FileSegment[length];
-    // filToBytesData's Length
-    public int DataTotalLength { get; private set; } = length;
-
-    // filToBytesData[^1]'s byte[]'s Length
-    public int LastBytesLength { get; private set; }
+    private FileSegment[] _fileToBytesData = new FileSegment[segmentLength];
+    public int SegmentLength { get; private set; } = segmentLength;
+    public int ByteTotalLength => _fileToBytesData.Sum(segment => segment.Partition.Bytes.Length);
+    public int LastTransactedSegmentIndex { get; private set; }
     public int Count { get; private set; }
+    
+    public FileSegment[] FileBytes => _fileToBytesData;
 
     public void Resize(int length)
     {
-        Count = 0;
-        DataTotalLength = length;
+        SegmentLength = length;
         Array.Resize(ref _fileToBytesData, length);
     }
 
@@ -20,8 +19,11 @@
         _fileToBytesData[data.Partition.Index] = data;
         Count++;
     }
-
-    public void CountUp() => Count++;
+    
+    public void CountUp()
+    {
+        Count++;
+    }
 
     public bool IsValidatedIndex(int otherIndex)
     {
@@ -32,7 +34,7 @@
     }
     public void SetLastBytesLength(FileSegment data)
     {
-        LastBytesLength = data.Partition.Index == DataTotalLength - 1
+        LastTransactedSegmentIndex = data.Partition.Index == SegmentLength - 1
             ? data.Partition.Bytes.Length
             : data.Partition.Index;
     }

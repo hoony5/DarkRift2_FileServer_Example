@@ -18,12 +18,12 @@ public class RequestCreateParty
 
   public RequestCreateParty()
     : this(
-      new User(new UserHeader(PreventExceptionStringValue), PreventExceptionStringValue, PreventExceptionNumericValue),
-      PreventExceptionStringValue,
-      PreventExceptionStringValue,
-      PreventExceptionNumericValue,
+      new User(new UserHeader(StringNullValue), StringNullValue, NumericNullValue),
+      StringNullValue,
+      StringNullValue,
+      NumericNullValue,
       false,
-      PreventExceptionNumericValue)
+      NumericNullValue)
   {
     
   }

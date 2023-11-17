@@ -1,20 +1,20 @@
 ﻿[Serializable]
 [method: JsonConstructor]
-public class ResponseUploadValidation(
+public class ResponseUploadAccept(
         string fileNameWithoutExtension,
-        string fileType,
+        string fileExtension,
         ushort clientID) 
     : ServerResponseModelBase(clientID)
 {
     public string FileNameWithoutExtension { get; private set; } = fileNameWithoutExtension;
 
-    public string FileType { get; private set; } = fileType;
+    public string FileExtension { get; private set; } = fileExtension;
 
     public override void Deserialize(DeserializeEvent e)
     {
         base.Deserialize(e);
         FileNameWithoutExtension = e.Reader.ReadString();
-        FileType = e.Reader.ReadString();
+        FileExtension = e.Reader.ReadString();
     }
 
     public override void Serialize(SerializeEvent e)
@@ -22,9 +22,9 @@ public class ResponseUploadValidation(
         base.Serialize(e);
 #if DEBUG
         CheckValidationString(this, FileNameWithoutExtension);
-        CheckValidationString(this, FileType);
+        CheckValidationString(this, FileExtension);
 #endif
         e.Writer.Write(FileNameWithoutExtension);
-        e.Writer.Write(FileType);
+        e.Writer.Write(FileExtension);
     }
 }

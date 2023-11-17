@@ -8,7 +8,7 @@
         {
             res.State = 0;
             res.Log = $"There is no party named {req.PartyName}";
-            new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_REMOVE_MEMBER);
+            _ = new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_REMOVE_MEMBER);
             return;
         }
         
@@ -16,17 +16,17 @@
         {
             res.State = 0;
             res.Log = $"There is no member named {req.RemovedUserInfo.AccountID}";
-            new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_REMOVE_MEMBER);
+            _ = new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_REMOVE_MEMBER);
             return;
         }
         
         party.Members.Remove(req.RemovedUserInfo.AccountID);
         party.CurrentPlayers = LEADER_COUNT + party.Members.Count;
-        req.RemovedUserInfo.PartyKey = PreventExceptionStringValue;
+        req.RemovedUserInfo.PartyKey = StringNullValue;
         res.State = 1;
         res.RemovedUserInfo = req.RemovedUserInfo;
         res.PartyName = req.PartyName;
-        new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_REMOVE_MEMBER);
+        _ = new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_REMOVE_MEMBER);
         DatabaseCenter.Instance.GetUserDb().UserHeaderMap.AddOrUpdate(req.PartyName, req.RemovedUserInfo);
         FileServer.DebugLog($@"
 [Remove Member]

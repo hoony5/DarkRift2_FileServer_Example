@@ -15,7 +15,7 @@ internal static class ManagementAes
         get
         {
             string? serverConsolePath = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
-            if (string.IsNullOrEmpty(serverConsolePath)) return PreventExceptionStringValue;
+            if (string.IsNullOrEmpty(serverConsolePath)) return StringNullValue;
 
             return Path.Combine(serverConsolePath, SecurityPath);
         }
@@ -41,7 +41,7 @@ internal static class ManagementAes
                 }
             }
 
-            return PreventExceptionStringValue;
+            return StringNullValue;
         }
     }
 
@@ -65,7 +65,7 @@ internal static class ManagementAes
                 }
             }
 
-            return PreventExceptionStringValue;
+            return StringNullValue;
         }
     }
 
@@ -113,7 +113,6 @@ internal static class ManagementAes
                     }
                 }
             }
-
         }
     }
 }

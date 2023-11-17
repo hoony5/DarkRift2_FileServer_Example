@@ -3,11 +3,11 @@
 public class UserHeader(string accountID) : IDarkRiftSerializable
 {
     [JsonProperty(nameof(AccountID))]public string AccountID { get; private set; } = accountID;
-    [JsonProperty(nameof(NickName))]public string NickName { get; set; } = PreventExceptionStringValue;
-    [JsonProperty(nameof(PartyKey))]public string PartyKey { get; set; } = PreventExceptionStringValue;
+    [JsonProperty(nameof(NickName))]public string NickName { get; set; } = StringNullValue;
+    [JsonProperty(nameof(PartyKey))]public string PartyKey { get; set; } = StringNullValue;
     [JsonProperty(nameof(ConnectionState))]public ushort ConnectionState { get; set; }
 
-    public UserHeader() : this(PreventExceptionStringValue)
+    public UserHeader() : this(StringNullValue)
     {
         
     }

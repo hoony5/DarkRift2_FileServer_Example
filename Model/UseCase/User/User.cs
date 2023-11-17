@@ -9,8 +9,8 @@ public class User(UserHeader header, string password, ushort clientID) : IDarkRi
     public User()
         : this(
             new UserHeader(),
-            PreventExceptionStringValue,
-            PreventExceptionNumericValue)
+            StringNullValue,
+            NumericNullValue)
     {
         
     }

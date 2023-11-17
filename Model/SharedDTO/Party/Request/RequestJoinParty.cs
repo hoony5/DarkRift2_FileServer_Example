@@ -13,9 +13,9 @@ public class RequestJoinParty
 
     public RequestJoinParty()
         : this(
-            new UserHeader(PreventExceptionStringValue),
-            PreventExceptionStringValue,
-            PreventExceptionNumericValue
+            new UserHeader(StringNullValue),
+            StringNullValue,
+            NumericNullValue
         )
     {
         

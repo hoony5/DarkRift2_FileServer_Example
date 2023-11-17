@@ -3,4 +3,7 @@
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005Cpower_005CRiderProjects_005CUnitsAbilitiesLogic_005CFileServerConsole_005CDarkRift_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005Cpower_005CRiderProjects_005CUnitsAbilitiesLogic_005CFileServerConsole_005CDarkRift_002EServer_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005Cpower_005CRiderProjects_005CUnitsAbilitiesLogic_005CFileServer_005CFileServerConsole_005CDarkRift_002Edll/@EntryIndexedValue">True</s:Boolean>
-	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005Cpower_005CRiderProjects_005CUnitsAbilitiesLogic_005CFileServer_005CFileServerConsole_005CDarkRift_002EServer_002Edll/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005Cpower_005CRiderProjects_005CUnitsAbilitiesLogic_005CFileServer_005CFileServerConsole_005CDarkRift_002EServer_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=969674a5_002D90a1_002D4eab_002D8cbc_002D2927f96a74e6/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Session" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Nothing /&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

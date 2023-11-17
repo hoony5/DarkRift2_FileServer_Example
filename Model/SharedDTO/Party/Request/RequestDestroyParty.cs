@@ -9,9 +9,9 @@ public class RequestDestroyParty(string senderAccountID, string partyName, ushor
     
     public RequestDestroyParty()
         : this(
-            PreventExceptionStringValue,
-            PreventExceptionStringValue,
-            PreventExceptionNumericValue)
+            StringNullValue,
+            StringNullValue,
+            NumericNullValue)
     {
         
     }

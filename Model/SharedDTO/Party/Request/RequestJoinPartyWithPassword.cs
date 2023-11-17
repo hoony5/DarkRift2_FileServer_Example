@@ -16,10 +16,10 @@ public class RequestJoinPartyWithPassword
 
     public RequestJoinPartyWithPassword()
         : this( 
-            new UserHeader(PreventExceptionStringValue), 
-            PreventExceptionStringValue, 
-            PreventExceptionStringValue, 
-            PreventExceptionNumericValue)
+            new UserHeader(StringNullValue), 
+            StringNullValue, 
+            StringNullValue, 
+            NumericNullValue)
     {
         
     }

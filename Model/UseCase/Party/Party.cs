@@ -10,11 +10,11 @@ public class Party(
     : IDarkRiftSerializable
 {
     public Party() : this(
-        PreventExceptionStringValue,
-        PreventExceptionStringValue,
-        PreventExceptionStringValue,
-        PreventExceptionNumericValue,
-        PreventExceptionNumericValue,
+        StringNullValue,
+        StringNullValue,
+        StringNullValue,
+        NumericNullValue,
+        NumericNullValue,
         new UserHeader())
     {
         Members = new Dictionary<string, UserHeader>(MaxPlayers);
@@ -54,7 +54,7 @@ public class Party(
     {
         if (Members.Count is 0) return;
         UserHeader member = Members.FirstOrDefault().Value;
-        if (member.AccountID.Equals(PreventExceptionStringValue)) return;
+        if (member.AccountID.Equals(StringNullValue)) return;
         Leader = new UserHeader(member.AccountID)
         {
             NickName = member.NickName,
@@ -107,7 +107,7 @@ public class Party(
 
         e.Writer.Write(
             HistoryQueue.Count is 0 ?
-            PreventExceptionStringArray :
+            StringNullArray :
             HistoryQueue.ToArray()
             );
 
