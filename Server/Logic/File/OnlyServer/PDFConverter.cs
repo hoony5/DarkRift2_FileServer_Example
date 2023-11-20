@@ -36,7 +36,7 @@ public class PDFConverter : IDisposable
             string converterPath = "";
             using (FileStream fs = new FileStream(path, FileMode.Open))
             {
-                string? line;
+                string line = string.Empty;
                 using (StreamReader reader = new StreamReader(fs))
                 {
                     string text = reader.ReadToEnd();
@@ -68,7 +68,7 @@ public class PDFConverter : IDisposable
             using (StreamWriter? sw = converter?.StandardInput)
             {
                 string? consolePath = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
-                string finalPath = Path.Combine(consolePath, SharedFileFolderName, saveAs);
+                string finalPath = Path.Combine(consolePath!, SharedFileFolderName, saveAs);
                 sw?.WriteLine
                     ($"-{FILE_TYPE_SIGNATURE}={fileExtension} -{FILE_PATH_SIGNATURE}={fileFullPath} -{SAVE_PATH_SIGNATURE}={finalPath}");
             }

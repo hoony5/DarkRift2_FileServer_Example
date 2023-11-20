@@ -92,7 +92,7 @@
                     $"{onlyFileName} Advertisement Upload Completion.",
                     SuccessState);
                     
-            _ = new ServerEncryptedDtoWriter().SendMessageToParty(party, alarm, Tags.REQUEST_ADVERTISE_UPLOAD_COMPLETION);
+            _ = new ServerEncryptedDtoWriter().SendMessageToParty(party!, alarm, Tags.REQUEST_ADVERTISE_UPLOAD_COMPLETION);
         }
         else
         {
@@ -104,7 +104,7 @@
     public void ProcessUploadFile(RequestUploadFile? req, MessageReceivedEventArgs e)
     {
         ResponseUploadFile res;
-        if (req.PartyKey.Equals(StringNullValue))
+        if (req!.PartyKey.Equals(StringNullValue))
         {
             res = new ResponseUploadFile(
                 StringNullValue,
