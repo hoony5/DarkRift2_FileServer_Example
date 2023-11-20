@@ -1,4 +1,15 @@
-﻿
+﻿using Newtonsoft.Json;
+using static SharedValue;
+
     [Serializable]
-    [method: JsonConstructor]
-    public class ResponseAccessFiles(ushort clientID) : ServerResponseModelBase(clientID);
+    public class ResponseAccessFiles : ServerResponseModelBase
+    {
+        [JsonConstructor]
+        public ResponseAccessFiles(ushort clientID, ushort state, string log) : base(clientID, state, log)
+        {
+        }
+
+        public ResponseAccessFiles() : this(NumericNullValue, NumericNullValue, SuccessResponse)
+        {
+        }
+    }

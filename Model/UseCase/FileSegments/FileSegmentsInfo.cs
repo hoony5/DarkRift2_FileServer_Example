@@ -1,13 +1,23 @@
-﻿public class FileSegmentsInfo(int segmentLength = 100)
+﻿public class FileSegmentsInfo
 {
-    private FileSegment[] _fileToBytesData = new FileSegment[segmentLength];
-    public int SegmentLength { get; private set; } = segmentLength;
+    private FileSegment[] _fileToBytesData;
+    public int SegmentLength { get; private set; }
     public int ByteTotalLength => _fileToBytesData.Sum(segment => segment.Bytes.Length);
     public int LastTransactedSegmentIndex { get; private set; }
     public int Count { get; private set; }
     
     public FileSegment[] FileBytes => _fileToBytesData;
 
+
+    public FileSegmentsInfo() : this(0)
+    {
+        _fileToBytesData = new [ ]{ new FileSegment() };
+    }
+    public FileSegmentsInfo(int segmentLength)
+    {
+        _fileToBytesData = new FileSegment[segmentLength];
+        SegmentLength = segmentLength;
+    }
     public void Resize(int length)
     {
         SegmentLength = length;

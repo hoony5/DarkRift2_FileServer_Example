@@ -36,30 +36,37 @@ public class ServerReader
 
                     #region Processing Upload File
                     case Tags.REQUEST_UPLOAD_ACCEPT:
+                        new UploadFileProcessor().ProcessRequestUploadFile(reader.ReadSerializable<RequestUploadAccept>(), e);
                         break;
                     case Tags.REQUEST_UPLOAD_FILE:
+                        new UploadFileProcessor().ProcessUploadFile(reader.ReadSerializable<RequestUploadFile>(), e);
                         break;
                     #endregion
 
                     #region Processing Download File
                     case Tags.REQUEST_DOWNLOAD_ACCEPT:
+                        new DownloadFileProcessor().ProcessRequestDownloadFile(reader.ReadSerializable<RequestDownloadAccept>(), e);
                         break;
                     case Tags.REQUEST_DOWNLOAD_FILE:
+                        new DownloadFileProcessor().ProcessDownloadFile(reader.ReadSerializable<RequestDownloadFile>(), e);
                         break;
                     #endregion
 
                     #region Processing Search File
                     case Tags.REQUEST_FILE_SEARCHING:
+                        new FileFinder().ProcessSearchFile(reader.ReadSerializable<RequestFileSearching>(), e);
                         break;
                     #endregion
 
                     #region Processing Delete File
                     case Tags.REQUEST_DELETE_ALL_FILES:
+                        new DeleteFileProcessor().ProcessDeleteFiles(reader.ReadSerializable<RequestDeleteAllFiles>(), e);
                         break;
                     #endregion
 
                     #region Processing Advertise Done File upload
                     case Tags.REQUEST_ADVERTISE_UPLOAD_COMPLETION:
+                        new AdvertisementProcessor().ProcessAdvertisement(reader.ReadSerializable<RequestAdvertiseUploadCompletion>(), e);
                         break;
                     #endregion
 
@@ -74,6 +81,12 @@ public class ServerReader
 
                     #region Processing File Share End
                     case Tags.REQUEST_FILE_SHARE_END:
+                        break;
+                    #endregion
+
+                    #region Processing Unformatted Message
+                    case Tags.REQUEST_UNFORMATTED_MESSAGE:
+                        new UnformattedMessageProcessor().ProcessUnformattedMessage(reader.ReadSerializable<RequestUnformattedMessage>(), e);
                         break;
                     #endregion
                     default:

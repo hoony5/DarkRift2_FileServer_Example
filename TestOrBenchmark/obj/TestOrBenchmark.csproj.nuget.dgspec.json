@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\power\\RiderProjects\\UnitsAbilitiesLogic\\FileServer\\TestOrBenchmark\\TestOrBenchmark.csproj": {}
+    "C:\\Users\\user\\Desktop\\MyWork\\DarkRift2_FileServer_Example\\TestOrBenchmark\\TestOrBenchmark.csproj": {}
   },
   "projects": {
-    "C:\\Users\\power\\RiderProjects\\UnitsAbilitiesLogic\\FileServer\\TestOrBenchmark\\TestOrBenchmark.csproj": {
+    "C:\\Users\\user\\Desktop\\MyWork\\DarkRift2_FileServer_Example\\TestOrBenchmark\\TestOrBenchmark.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\power\\RiderProjects\\UnitsAbilitiesLogic\\FileServer\\TestOrBenchmark\\TestOrBenchmark.csproj",
+        "projectUniqueName": "C:\\Users\\user\\Desktop\\MyWork\\DarkRift2_FileServer_Example\\TestOrBenchmark\\TestOrBenchmark.csproj",
         "projectName": "TestOrBenchmark",
-        "projectPath": "C:\\Users\\power\\RiderProjects\\UnitsAbilitiesLogic\\FileServer\\TestOrBenchmark\\TestOrBenchmark.csproj",
-        "packagesPath": "C:\\Users\\power\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\power\\RiderProjects\\UnitsAbilitiesLogic\\FileServer\\TestOrBenchmark\\obj\\",
+        "projectPath": "C:\\Users\\user\\Desktop\\MyWork\\DarkRift2_FileServer_Example\\TestOrBenchmark\\TestOrBenchmark.csproj",
+        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\user\\Desktop\\MyWork\\DarkRift2_FileServer_Example\\TestOrBenchmark\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\power\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,7 +26,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {

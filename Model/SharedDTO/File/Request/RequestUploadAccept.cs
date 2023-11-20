@@ -1,14 +1,10 @@
-﻿[Serializable]
-[method:JsonConstructor]
-public class RequestUploadAccept(
-        ushort senderClientID,
-        string senderPartyKey,
-        int lastSegmentIndex,
-        int lastSegmentLength, 
-        string fileNameWithoutExtension,
-        string fileExtension,
-        string id) 
-    : ServerRequestModelBase(id)
+﻿using DarkRift;
+using Newtonsoft.Json;
+using static DtoValidator;
+using static SharedValue;
+
+[Serializable]
+public class RequestUploadAccept : ServerRequestModelBase
 {
     [JsonProperty(nameof(SenderClientID))]public ushort SenderClientID { get; private set; }
     [JsonProperty(nameof(SenderPartyKey))]public string SenderPartyKey { get; private set; }
@@ -17,6 +13,28 @@ public class RequestUploadAccept(
     [JsonProperty(nameof(FileNameWithoutExtension))]public string FileNameWithoutExtension { get; private set; }
     [JsonProperty(nameof(FileExtension))]public string FileExtension { get; private set; }
 
+    [JsonConstructor]
+    public RequestUploadAccept(ushort senderClientID,
+        string senderPartyKey,
+        int lastSegmentIndex,
+        int lastSegmentLength,
+        string fileNameWithoutExtension,
+        string fileExtension,
+        string id,
+        ushort state,
+        string log) : base(id,state,log)
+    {
+        SenderClientID = senderClientID;
+        SenderPartyKey = senderPartyKey;
+        LastSegmentIndex = lastSegmentIndex;
+        LastSegmentByteLength = lastSegmentLength;
+        FileNameWithoutExtension = fileNameWithoutExtension;
+        FileExtension = fileExtension;
+    }
+    public RequestUploadAccept()
+        : this(NumericNullValue, StringNullValue, NumericNullValue,
+            NumericNullValue, StringNullValue, StringNullValue,
+            StringNullValue, NumericNullValue, SuccessResponse) { }
     public override void Deserialize(DeserializeEvent e)
     {
         base.Deserialize(e);

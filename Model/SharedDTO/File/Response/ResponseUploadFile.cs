@@ -1,16 +1,29 @@
-﻿[Serializable]
-[method: JsonConstructor]
-public class ResponseUploadFile(
-        string fileNameWithoutExtension,
+﻿using DarkRift;
+using Newtonsoft.Json;
+using static DtoValidator;
+using static SharedValue;
+
+[Serializable]
+public class ResponseUploadFile : ServerResponseModelBase
+{
+    [JsonProperty(nameof(FileNameWithoutExtension))] public string FileNameWithoutExtension { get; private set; }
+    [JsonProperty(nameof(FileExtension))] public string FileExtension { get; private set; }
+    [JsonProperty(nameof(UploadSegmentIndex))] public int UploadSegmentIndex { get; private set; }
+
+    [JsonConstructor]
+    public ResponseUploadFile(string fileNameWithoutExtension,
         string fileExtension,
         int uploadSegmentIndex,
-        ushort clientID)
-    : ServerResponseModelBase(clientID)
-{
-    [JsonProperty(nameof(FileNameWithoutExtension))] public string FileNameWithoutExtension { get; private set; } = fileNameWithoutExtension;
-    [JsonProperty(nameof(FileExtension))] public string FileExtension { get; private set; } = fileExtension;
-    [JsonProperty(nameof(UploadSegmentIndex))] public int UploadSegmentIndex { get; private set; } = uploadSegmentIndex;
-
+        ushort clientID,
+        ushort state,
+        string log) : base(clientID, state, log)
+    {
+        FileNameWithoutExtension = fileNameWithoutExtension;
+        FileExtension = fileExtension;
+        UploadSegmentIndex = uploadSegmentIndex;
+    }
+    public ResponseUploadFile() : this(StringNullValue, StringNullValue, NumericNullValue,
+        NumericNullValue, NumericNullValue, SuccessResponse) { }
     public override void Deserialize(DeserializeEvent e)
     {
         base.Deserialize(e);

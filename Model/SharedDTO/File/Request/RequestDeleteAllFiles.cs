@@ -1,9 +1,19 @@
-﻿[Serializable]
-[method:JsonConstructor]
-public class RequestDeleteAllFiles(string senderPartyKey, string id) : ServerRequestModelBase(id)
-{
-    [JsonProperty(nameof(SenderPartyKey))] public string SenderPartyKey { get; private set; } = senderPartyKey;
+﻿using DarkRift;
+using Newtonsoft.Json;
+using static DtoValidator;
+using static SharedValue;
 
+[Serializable]
+public class RequestDeleteAllFiles : ServerRequestModelBase
+{
+    [JsonProperty(nameof(SenderPartyKey))] public string SenderPartyKey { get; private set; }
+
+    [JsonConstructor]
+    public RequestDeleteAllFiles(string senderPartyKey, string id, ushort state, string log) : base(id, state, log)
+    {
+        SenderPartyKey = senderPartyKey;
+    }
+    public RequestDeleteAllFiles() : this(StringNullValue, StringNullValue, NumericNullValue, SuccessResponse) { }
     public override void Deserialize(DeserializeEvent e)
     {
         base.Deserialize(e);

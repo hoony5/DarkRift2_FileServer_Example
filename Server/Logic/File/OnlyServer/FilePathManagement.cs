@@ -3,7 +3,7 @@
 public static class FilePathManagement
 {
     private static readonly string? basePath = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
-    public static string GetSharedFilePath()
+    public static string GetSharedFileRootPath()
     {
         return basePath is null 
             ? "There is no shared file path" 

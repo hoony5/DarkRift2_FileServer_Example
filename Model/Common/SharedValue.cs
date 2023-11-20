@@ -1,4 +1,4 @@
-﻿public static class CommonValue
+﻿public static class SharedValue
 {
     public static string SuccessResponse => "* Success *";
     public static string StringNullValue => "N/A";
@@ -24,4 +24,6 @@
     public static int CommandKeywordIndex => 1;
 
     public static int ConcurrencyLevel = Environment.ProcessorCount * 2;
+    public static ushort FailedState => 0;
+    public static ushort SuccessState => 1;
 }

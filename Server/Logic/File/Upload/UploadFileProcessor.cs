@@ -2,15 +2,18 @@
 {
     // if file name contains '.' one or more, it will be error.
     // blocking dot, when send message on the unity. 
-    public void ProcessRequestUploadFile(RequestUploadAccept req, MessageReceivedEventArgs e)
+    public void ProcessRequestUploadFile(RequestUploadAccept? req, MessageReceivedEventArgs e)
     {
         ResponseUploadAccept res;
 
         if (req.SenderPartyKey.Equals(StringNullValue))
         {
-            res = new ResponseUploadAccept(StringNullValue, StringNullValue, e.Client.ID);
-            res.State = 0;
-            res.Log = "you need to create or join party.";
+            res = new ResponseUploadAccept(
+                StringNullValue,
+                StringNullValue,
+                e.Client.ID,
+                FailedState,
+                "you need to create or join party.");
 
             _ = new ServerEncryptedDtoWriter().SendMessage(e.Client, res, Tags.RESPONSE_UPLOAD_ACCEPT);
             return;
@@ -28,8 +31,9 @@
         res = new ResponseUploadAccept(
             fileNameWithoutExtension: req.FileNameWithoutExtension,
             fileExtension: req.FileExtension,
-            clientID: e.Client.ID);
-        res.State = 1;
+            clientID: e.Client.ID,
+            state: SuccessState,
+            log: "success");
 
         _ = new ServerEncryptedDtoWriter().SendMessage(e.Client, res, Tags.RESPONSE_UPLOAD_ACCEPT);
 
@@ -55,7 +59,7 @@
     {
         // Save Bytes to File.
         Task.Run(async () => await WriteAllBytesAsync(finalPath, totalByteArray));
-        res.State = 1;
+        res.State = SuccessState;
 
         // Copy to Download Record
         fileManagement.CopyToDownloadFileMap(
@@ -82,7 +86,11 @@
         if (DatabaseCenter.Instance.GetPartyDb().PartyMap.TryGetValue(req.PartyKey, out Party? party))
         {
             RequestAdvertiseUploadCompletion alarm =
-                new RequestAdvertiseUploadCompletion(onlyFileName, req.AccountID);
+                new RequestAdvertiseUploadCompletion(
+                    onlyFileName,
+                    req.ID,
+                    $"{onlyFileName} Advertisement Upload Completion.",
+                    SuccessState);
                     
             _ = new ServerEncryptedDtoWriter().SendMessageToParty(party, alarm, Tags.REQUEST_ADVERTISE_UPLOAD_COMPLETION);
         }
@@ -93,14 +101,18 @@
         }
     }
 
-    public void ProcessUploadFile(RequestUploadFile req, MessageReceivedEventArgs e)
+    public void ProcessUploadFile(RequestUploadFile? req, MessageReceivedEventArgs e)
     {
         ResponseUploadFile res;
         if (req.PartyKey.Equals(StringNullValue))
         {
-            res = new ResponseUploadFile(StringNullValue, StringNullValue, 0, e.Client.ID);
-            res.State = 0;
-            res.Log = "you need to create or join party.";
+            res = new ResponseUploadFile(
+                StringNullValue,
+                StringNullValue,
+                NumericNullValue,
+                e.Client.ID,
+                FailedState,
+                "you need to create or join party.");
             _ = new ServerEncryptedDtoWriter().SendMessage(e.Client, res, Tags.RESPONSE_UPLOAD_FILE);
             return;
         }
@@ -111,8 +123,9 @@
             fileNameWithoutExtension: req.Segment.FileNameWithoutExtension,
             fileExtension: req.Segment.FileExtension,
             uploadSegmentIndex: req.Segment.Index,
-            clientID: e.Client.ID);
-        res.State = 1;
+            clientID: e.Client.ID,
+            state: SuccessState,
+            log: "success");
 
         // Save On Server Computer
         UploadedFileManagement fileManagement

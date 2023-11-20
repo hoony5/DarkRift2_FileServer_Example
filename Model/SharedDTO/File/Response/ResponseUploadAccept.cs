@@ -1,15 +1,22 @@
-﻿[Serializable]
-[method: JsonConstructor]
-public class ResponseUploadAccept(
-        string fileNameWithoutExtension,
-        string fileExtension,
-        ushort clientID) 
-    : ServerResponseModelBase(clientID)
+﻿using Newtonsoft.Json;
+using DarkRift;
+using static DtoValidator;
+using static SharedValue;
+
+[Serializable]
+public class ResponseUploadAccept : ServerResponseModelBase
 {
-    public string FileNameWithoutExtension { get; private set; } = fileNameWithoutExtension;
-
-    public string FileExtension { get; private set; } = fileExtension;
-
+    [JsonProperty(nameof(FileNameWithoutExtension))]public string FileNameWithoutExtension { get; private set; }
+    [JsonProperty(nameof(FileExtension))]public string FileExtension { get; private set; }
+    [JsonConstructor]
+    public ResponseUploadAccept(string fileNameWithoutExtension,
+        string fileExtension,
+        ushort clientID, ushort state, string log) : base(clientID, state, log)
+    {
+        FileNameWithoutExtension = fileNameWithoutExtension;
+        FileExtension = fileExtension;
+    }
+    public ResponseUploadAccept() : this(StringNullValue, StringNullValue, NumericNullValue, NumericNullValue, SuccessResponse) { }
     public override void Deserialize(DeserializeEvent e)
     {
         base.Deserialize(e);

@@ -1,28 +1,30 @@
-﻿[Serializable]
-[method: JsonConstructor]
-public class RequestJoinPartyWithPassword
-    (UserHeader joinedUserInfo, string partyName, string partyPassword, ushort senderClientID) 
-    : ServerRequestModelBase(joinedUserInfo.AccountID)
+﻿using DarkRift;
+using Newtonsoft.Json;
+using static DtoValidator;
+using static SharedValue;
+
+[Serializable]
+public class RequestJoinPartyWithPassword : ServerRequestModelBase
 {
-    [JsonProperty(nameof(JoinedUserInfo))]public UserHeader JoinedUserInfo { get; private set; } 
-        = joinedUserInfo;
+    [JsonProperty(nameof(JoinedUserInfo))]public UserHeader JoinedUserInfo { get; private set; }
 
     [JsonProperty(nameof(PartyName))] public string PartyName { get; private set; }
-        = partyName;
-    [JsonProperty(nameof(PartyPassword))]public string PartyPassword { get; private set; } 
-        = partyPassword;
-    [JsonProperty(nameof(SenderClientID))]public ushort SenderClientID { get; private set; } 
-        = senderClientID;
+    [JsonProperty(nameof(PartyPassword))]public string PartyPassword { get; private set; }
+    [JsonProperty(nameof(SenderClientID))]public ushort SenderClientID { get; private set; }
 
-    public RequestJoinPartyWithPassword()
-        : this( 
-            new UserHeader(StringNullValue), 
-            StringNullValue, 
-            StringNullValue, 
-            NumericNullValue)
+    public RequestJoinPartyWithPassword() : this(new UserHeader(StringNullValue), StringNullValue,
+            StringNullValue, NumericNullValue, NumericNullValue, SuccessResponse) { }
+
+    [JsonConstructor]
+    public RequestJoinPartyWithPassword(UserHeader joinedUserInfo, string partyName, string partyPassword,
+        ushort senderClientID, ushort state, string log) : base(joinedUserInfo.AccountID, state, log)
     {
-        
+        JoinedUserInfo = joinedUserInfo;
+        PartyName = partyName;
+        PartyPassword = partyPassword;
+        SenderClientID = senderClientID;
     }
+
     public override void Serialize(SerializeEvent e)
     {
         base.Serialize(e);

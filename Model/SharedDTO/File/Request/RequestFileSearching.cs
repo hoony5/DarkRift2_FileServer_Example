@@ -1,11 +1,22 @@
-﻿[Serializable]
-[method:JsonConstructor]
-public class RequestFileSearching(ushort senderClientID, string senderPartyKey, string id) 
-    : ServerRequestModelBase(id)
-{
-    [JsonProperty(nameof(SenderClientID))]public ushort SenderClientID { get; private set; } = senderClientID;
-    [JsonProperty(nameof(SenderPartyKey))]public string SenderPartyKey { get; private set; } = senderPartyKey;
+﻿using DarkRift;
+using Newtonsoft.Json;
+using static DtoValidator;
+using static SharedValue;
 
+[Serializable]
+public class RequestFileSearching : ServerRequestModelBase
+{
+    [JsonProperty(nameof(SenderClientID))]public ushort SenderClientID { get; private set; }
+    [JsonProperty(nameof(SenderPartyKey))]public string SenderPartyKey { get; private set; }
+
+    [JsonConstructor]
+    public RequestFileSearching(ushort senderClientID, string senderPartyKey, string id, ushort state, string log)
+        : base(id,state,log)
+    {
+        SenderClientID = senderClientID;
+        SenderPartyKey = senderPartyKey;
+    }
+    public RequestFileSearching() : this(NumericNullValue, StringNullValue, StringNullValue, NumericNullValue, SuccessResponse) { }
     public override void Deserialize(DeserializeEvent e)
     {
         base.Deserialize(e);

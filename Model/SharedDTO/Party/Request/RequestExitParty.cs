@@ -1,20 +1,27 @@
-﻿[Serializable]
-[method:JsonConstructor]
-public class RequestExitParty(UserHeader departedUser, string partyName, ushort senderClientID)
-    : ServerRequestModelBase(departedUser.AccountID)
-{
-    [JsonProperty(nameof(DepartedUser))]public UserHeader DepartedUser { get; private set; } = departedUser;
-    [JsonProperty(nameof(PartyName))]public string PartyName { get; private set; } = partyName;
-    [JsonProperty(nameof(SenderClientID))] public ushort SenderClientID { get; private set; } = senderClientID;
+﻿using DarkRift;
+using Newtonsoft.Json;
+using static DtoValidator;
+using static SharedValue;
 
-    public RequestExitParty()
-        : this(
-            new UserHeader(StringNullValue),
-            StringNullValue,
-            NumericNullValue)
+[Serializable]
+public class RequestExitParty : ServerRequestModelBase
+{
+    [JsonProperty(nameof(DepartedUser))]public UserHeader DepartedUser { get; private set; }
+    [JsonProperty(nameof(PartyName))]public string PartyName { get; private set; }
+    [JsonProperty(nameof(SenderClientID))] public ushort SenderClientID { get; private set; }
+
+    public RequestExitParty() : this(new UserHeader(StringNullValue), StringNullValue,
+        NumericNullValue, NumericNullValue, StringNullValue) { }
+
+    [JsonConstructor]
+    public RequestExitParty(UserHeader departedUser, string partyName, ushort senderClientID, ushort state, string log)
+        : base(departedUser.AccountID, state, log)
     {
-        
+        DepartedUser = departedUser;
+        PartyName = partyName;
+        SenderClientID = senderClientID;
     }
+
     public override void Serialize(SerializeEvent e)
     {
         base.Serialize(e);

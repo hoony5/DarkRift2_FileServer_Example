@@ -1,109 +1,83 @@
-﻿// rough code
-public class DownloadedFileManagement
+﻿public class DownloadedFileManagement(IDictionary<string, NetworkCacheData<FileSegmentsInfo>> downloadFiles)
 {
-    private readonly Dictionary<string, NetworkCacheData<FileSegmentsInfo>> _downloadFiles;
-    static readonly ushort maxSegmentLength = 65000;
-
-    public bool ExistDownloadRecord(string partyKey, string fileName)
+    static readonly ushort partitionedSegmentLength = 60000;
+    public void RemoveDownloadFiles(string partyKey)
     {
-        if (!_downloadFiles.ContainsKey(partyKey))
+        if (!downloadFiles.ContainsKey(partyKey)) return;
+        downloadFiles.Remove(partyKey);
+    }
+    public bool TryGetDownloadRecord(string partyKey, string fileName, out FileSegmentsInfo? segmentsInfo)
+    {
+        segmentsInfo = null;
+        if (!downloadFiles.ContainsKey(partyKey))
             return false;
 
-        return _downloadFiles[partyKey].ContainsKey(fileName);
+        if (!downloadFiles[partyKey].ContainsKey(fileName))
+            return false;
+
+        segmentsInfo = downloadFiles[partyKey].TryGetValue(fileName, out FileSegmentsInfo? info)
+            ? info
+            : segmentsInfo;
+        return true;
     }
-
-    private void RemoveDownloadFiles(string partyKey)
+    public FileSegmentsInfo? SaveDownloadFileRecord(string partyKey, string fileName, byte[]? readAllBytes)
     {
-        if (!_downloadFiles.ContainsKey(partyKey)) return;
-        _downloadFiles.Remove(partyKey);
-    }
-    public FileSegmentsInfo? GetDownloadRecord(string partyKey, string fileName)
-    {
-        if (!_downloadFiles.ContainsKey(partyKey))
-            return new FileSegmentsInfo();
-
-        Console.WriteLine($"Get Download Record : {fileName}");
-        if(!_downloadFiles[partyKey].ContainsKey(fileName))
-            return new FileSegmentsInfo();
-
-        if(_downloadFiles[partyKey].TryGetValue(fileName, out FileSegmentsInfo? record))
+        if (!downloadFiles.TryGetValue(partyKey, out NetworkCacheData<FileSegmentsInfo>? value))
         {
-            record?.CountUp();
-
-            return record;
+            value = new NetworkCacheData<FileSegmentsInfo>();
+            downloadFiles.Add(partyKey, value);
         }
 
-        return null;
-    }
-    public FileSegmentsInfo ProcessDownloadFile(string partyKey, string fileName, byte[] readAllBytes)
-    {
+        List<byte[]> segments = PartitionedFileByteArray(readAllBytes);
+        if (segments.Count is 0) return new FileSegmentsInfo();
 
-        if(!_downloadFiles.ContainsKey(partyKey))
-            _downloadFiles.Add(partyKey , new Dictionary<string, FileSegmentsInfo>(0));
-
-        var segments = DivideArrayToSkipIndex(readAllBytes);
-        if (segments.Count == 0) return new FileSegmentsInfo();
-
-        if (!_downloadFiles[partyKey].ContainsKey(fileName))
-            _downloadFiles[partyKey].Add(fileName, new FileSegmentsInfo(segments.Count));
-
-        if(segments.Count != _downloadFiles[partyKey][fileName].dataTotalLength)
-            _downloadFiles[partyKey][fileName].Resize(segments.Count);
+        if(!value.TryGetValue(fileName, out FileSegmentsInfo? cached))
+        {
+            value.AddOrUpdate(fileName, new FileSegmentsInfo(segments.Count));
+        }
+        else
+        {
+            if(segments.Count != cached?.ByteTotalLength)
+            {
+                cached?.Resize(segments.Count);
+            }
+        }
 
         for (int i = 0; i < segments.Count; i ++)
         {
-            var segment = new FileSegment()// fileName
-                .SetBytes(segments[i])
-                .SetBytesIndex(i);
-
-            _downloadFiles[partyKey][fileName] = _downloadFiles[partyKey][fileName].SetFileBytes(segment);
-            FileServerPlugin.Debug($"segment_{i} / {segments.Count - 1}");
+            FileSegment segment = new FileSegment();// fileName
+            segment.SetBytes(segments[i]);
+            segment.SetBytesIndex(i);
+            cached?.SetFileBytes(segment);
         }
 
-        return _downloadFiles[partyKey][fileName];
-    }
-    public void RemoveFiles(LoadType type, string partyKey)
-    {
-        switch (type)
-        {
-            case LoadType.Upload:
-                RemoveUploadFiles(partyKey);
-                break;
-            case LoadType.Download:
-                RemoveDownloadFiles(partyKey);
-
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(type), type, null);
-        }
+        return cached;
     }
 
-    private List<byte[]> DivideArrayToSkipIndex(byte[] sourceBytes)
+    private List<byte[]> PartitionedFileByteArray(byte[]? sourceBytes)
     {
-        var ret = new List<byte[]>(0);
-        if (sourceBytes == null || sourceBytes.Length == 0)
-            return ret;
-        var maxIndex = sourceBytes.Length;
-        var lastIndex = maxIndex;
-        for (int i = 0 ; i <= maxIndex / maxSegmentLength; i ++)
+        List<byte[]> result = new List<byte[]>(0);
+        if (sourceBytes is null || sourceBytes.Length == 0) return result;
+        
+        int maxIndex = sourceBytes.Length;
+        int lastIndex = maxIndex;
+        int segmentCount = maxIndex / partitionedSegmentLength;
+        
+        for (int i = 0 ; i <= segmentCount; i ++)
         {
-            // divdie
-            int segmentMinIndex = i * maxSegmentLength;
-            int segmentMaxIndex = lastIndex > maxSegmentLength
-                ? i * maxSegmentLength + maxSegmentLength // not last
-                : maxSegmentLength * i + maxIndex % maxSegmentLength; // last
+            int segmentMinIndex = i * partitionedSegmentLength;
+            int segmentMaxIndex = lastIndex > partitionedSegmentLength
+                ? i * partitionedSegmentLength + partitionedSegmentLength // not last
+                : partitionedSegmentLength * i + maxIndex % partitionedSegmentLength; // last
             int length = segmentMaxIndex - segmentMinIndex;
             byte[] copy = new byte[length];
             Array.ConstrainedCopy(sourceBytes,segmentMinIndex, copy, 0, length);
 
             lastIndex -= length;
 
-            ret.Add(copy);
-            /*FileServerPlugin.Debug($"Work Divide :: {i} / {maxIndex / maxSegmentLength}");
-            if(i == maxIndex / maxSegmentLength)
-                FileServerPlugin.Debug($"Debug :: lastIndex is {lastIndex} | segmentMinIndex : {segmentMinIndex} | sementMaxIndex : {segmentMaxIndex} | source Length {sourceBytes.Length} | currentMultiplierIndex {i}");*/
+            result.Add(copy);
         }
 
-        return ret;
+        return result;
     }
 }

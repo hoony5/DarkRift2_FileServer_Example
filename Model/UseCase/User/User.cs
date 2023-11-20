@@ -1,10 +1,14 @@
-﻿[System.Serializable]
-[method: JsonConstructor]
-public class User(UserHeader header, string password, ushort clientID) : IDarkRiftSerializable
+﻿using DarkRift;
+using Newtonsoft.Json;
+using static DtoValidator;
+using static SharedValue;
+
+[System.Serializable]
+public class User : IDarkRiftSerializable
 {
-    [JsonProperty(nameof(Header))] public UserHeader Header { get; private set; } = header;
-    [JsonProperty(nameof(Password))] public string Password { get; private set; } = password;
-    [JsonProperty(nameof(ClientID))] public ushort ClientID { get; private set; } = clientID;
+    [JsonProperty(nameof(Header))] public UserHeader Header { get; private set; }
+    [JsonProperty(nameof(Password))] public string Password { get; private set; }
+    [JsonProperty(nameof(ClientID))] public ushort ClientID { get; private set; }
 
     public User()
         : this(
@@ -14,7 +18,15 @@ public class User(UserHeader header, string password, ushort clientID) : IDarkRi
     {
         
     }
-    
+
+    [JsonConstructor]
+    public User(UserHeader header, string password, ushort clientID)
+    {
+        Header = header;
+        Password = password;
+        ClientID = clientID;
+    }
+
     public void Deserialize(DeserializeEvent e)
     {
         Header = e.Reader.ReadSerializable<UserHeader>();

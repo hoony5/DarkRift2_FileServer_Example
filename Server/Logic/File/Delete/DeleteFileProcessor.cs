@@ -2,61 +2,37 @@
 public class DeleteFileProcessor
 {
 
-        public void ProcessDeleteFiles(byte[] decryptedData, MessageReceivedEventArgs e)
+        public void ProcessDeleteFiles(RequestDeleteAllFiles? req, MessageReceivedEventArgs e)
         {
-            var req = decryptedData.Deserializer<FileData.DeleteFiles>();
-            if (req.SenderPartyKey is "-1" or "" or null)
+            ResponseDeleteFiles res = new ResponseDeleteFiles()
             {
-                var cancelRet = new FileData.RequestAccessFilesResult();
-                cancelRet.isSuccess = false;
-                cancelRet.log = "you need to create or join party.";
-                cancelRet.senderClientID = e.Client.ID;
-                ClientMessageWriter.SendEncrpytedMessage(e.Client, cancelRet, Tag.Tags.DELETE_FILE_RESULT);
+                State = FailedState,
+                ClientID = e.Client.ID,
+            };
+            if (req.SenderPartyKey.Equals(StringNullValue) || string.IsNullOrEmpty(req.SenderPartyKey))
+            {
+                res.Log = "PartyKey is null or empty.";
+                new ServerEncryptedDtoWriter().SendMessage(e.Client, res, Tags.RESPONSE_DELETE_ALL_FILES);
                 return;
             }
-
-            var ret = new FileData.DeleteFilesResult();
-
-            ret.log = "Success\n";
-
-            RemoveDatas(req.SenderPartyKey);
-
-            ret.isSuccess = true;
-
-            ClientMessageWriter.SendEncrpytedMessage(e.Client, ret, Tag.Tags.DELETE_ALL_FILE_RESULT);
+            RemovePartyUploadedFiles(req.SenderPartyKey);
+            res.State = SuccessState;
+            new ServerEncryptedDtoWriter().SendMessage(e.Client, res, Tags.RESPONSE_DELETE_ALL_FILES);
         }
 
-        public void RemoveDatas(string partyKey)
-        {
-            // Delete Files.
-            DeleteFiles(partyKey, FileDirectoryInfo.tempPath);
-            DeleteFiles(partyKey, FileDirectoryInfo.glTFPath);
-            DeleteFiles(partyKey, FileDirectoryInfo.MP4Path);
-            DeleteFiles(partyKey, FileDirectoryInfo.MOVPath);
-            DeleteFiles(partyKey, FileDirectoryInfo.AVIPath);
-            DeleteFiles(partyKey, FileDirectoryInfo.FBXPath);
-            DeleteFiles(partyKey, FileDirectoryInfo.PDFPath);
-            DeleteFiles(partyKey, FileDirectoryInfo.PNGPath);
-            DeleteFiles(partyKey, FileDirectoryInfo.JPEGPath);
-            // Delete Files Info
-            FileLoader.RemoveFiles(LoadType.Upload,partyKey);
-            FileLoader.RemoveFiles(LoadType.Download,partyKey);
-            NetworkData.RemoveParty(partyKey);
-        }
-        private void DeleteFiles(string partyKey,string path)
+        public void RemovePartyUploadedFiles(string partyKey)
         {
             // Set directory path.
-            var dir = Path.Combine(path, partyKey);
+            string partyFilePath = FilePathManagement.GetPartyFilePath(partyKey);
 
-            if (!Directory.Exists(dir)) return;
+            if (!Directory.Exists(partyFilePath)) return;
 
-            var dirInfo = new DirectoryInfo(dir);
-            var files = dirInfo.GetFiles();
-
+            DirectoryInfo dirInfo = new DirectoryInfo(partyFilePath);
+            FileInfo[] files = dirInfo.GetFiles();
             // Delete files
             if (files.Length != 0)
             {
-                foreach (var file in files)
+                foreach (FileInfo file in files)
                 {
                     file.IsReadOnly = false;
                     file.Attributes = FileAttributes.Normal;
@@ -65,5 +41,9 @@ public class DeleteFileProcessor
             }
             dirInfo.Attributes = FileAttributes.Normal;
             dirInfo.Delete();
+            // Delete Files Info
+            PartyDatabase partyDb = DatabaseCenter.Instance.GetPartyDb();
+            new UploadedFileManagement(partyDb.UploadedFilesMap).RemoveUploadFiles(partyKey);
+            new DownloadedFileManagement(partyDb.DownloadedFilesMap).RemoveDownloadFiles(partyKey);
         }
 }

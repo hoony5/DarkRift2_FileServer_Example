@@ -1,9 +1,18 @@
-﻿[Serializable]
-[method: JsonConstructor]
-public class ResponseDestroyParty(ushort clientID) : ServerResponseModelBase(clientID)
+﻿using DarkRift;
+using Newtonsoft.Json;
+using static DtoValidator;
+using static SharedValue;
+
+[Serializable]
+public class ResponseDestroyParty : ServerResponseModelBase
 {
     [JsonProperty(nameof(PartyName))] public string PartyName { get; set; }
-
+    [JsonConstructor]
+    public ResponseDestroyParty(string partyName, ushort clientID, ushort state, string log) : base(clientID, state, log)
+    {
+        PartyName = partyName;
+    }
+    public ResponseDestroyParty() : this(StringNullValue, NumericNullValue, NumericNullValue, SuccessResponse) { }
     public override void Serialize(SerializeEvent e)
     {
         base.Serialize(e);

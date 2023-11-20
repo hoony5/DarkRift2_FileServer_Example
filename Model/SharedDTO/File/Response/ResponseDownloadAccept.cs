@@ -1,17 +1,34 @@
-﻿[Serializable]
-[method: JsonConstructor]
-public class ResponseDownloadAccept(
-        string fileNameWithoutExtension,
+﻿using DarkRift;
+using Newtonsoft.Json;
+using static DtoValidator;
+using static SharedValue;
+
+[Serializable]
+public class ResponseDownloadAccept : ServerResponseModelBase
+{
+    [JsonProperty(nameof(FileNameWithoutExtension))] public string FileNameWithoutExtension { get; private set; }
+    [JsonProperty(nameof(FileExtension))] public string FileExtension { get; private set; }
+    [JsonProperty(nameof(LastSegmentIndex))] public int LastSegmentIndex { get; private set; }
+    [JsonProperty(nameof(LastSegmentLength))] public int LastSegmentLength { get; private set; }
+
+    [JsonConstructor]
+    public ResponseDownloadAccept(string fileNameWithoutExtension,
         string fileExtension,
         int lastSegment,
         int lastSegmentLength,
-        ushort clientID)
-    : ServerResponseModelBase(clientID)
-{
-    [JsonProperty(nameof(FileNameWithoutExtension))] public string FileNameWithoutExtension { get; private set; } = fileNameWithoutExtension;
-    [JsonProperty(nameof(FileExtension))] public string FileExtension { get; private set; } = fileExtension;
-    [JsonProperty(nameof(LastSegmentIndex))] public int LastSegmentIndex { get; private set; } = lastSegment;
-    [JsonProperty(nameof(LastSegmentLength))] public int LastSegmentLength { get; private set; } = lastSegmentLength;
+        ushort clientID,
+        ushort state,
+        string log) : base(clientID, state, log)
+    {
+        FileNameWithoutExtension = fileNameWithoutExtension;
+        FileExtension = fileExtension;
+        LastSegmentIndex = lastSegment;
+        LastSegmentLength = lastSegmentLength;
+    }
+
+    public ResponseDownloadAccept() : this(StringNullValue, StringNullValue,
+        NumericNullValue, NumericNullValue, NumericNullValue, NumericNullValue,
+        SuccessResponse) { }
 
     public override void Deserialize(DeserializeEvent e)
     {

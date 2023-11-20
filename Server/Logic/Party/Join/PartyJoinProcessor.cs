@@ -1,12 +1,16 @@
 ﻿public class PartyJoinProcessor
 {
-    public void ProcessJoinPartyRequest(RequestJoinParty req, MessageReceivedEventArgs e)
+    public void ProcessJoinPartyRequest(RequestJoinParty? req, MessageReceivedEventArgs e)
     {
-        ResponseJoinParty res = new ResponseJoinParty(e.Client.ID);
+        ResponseJoinParty res = new ResponseJoinParty
+        {
+            ClientID = e.Client.ID
+        };
+
         // Invalidated Party
         if (!DatabaseCenter.Instance.GetPartyDb().PartyMap.TryGetValue(req.PartyName, out Party? party))
         {
-            res.State = 0;
+            res.State = FailedState;
             res.Log = $"There is no party named {req.PartyName}";
             _ = new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_JOIN_PARTY);
             return;
@@ -14,7 +18,7 @@
 
         if (party is null)
         {
-            res.State = 0;
+            res.State = FailedState;
             res.Log = $"There is no Value. => key: {req.PartyName}";
             _ = new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_JOIN_PARTY_WITH_PASSWORD);
             return;
@@ -28,7 +32,7 @@
         req.JoinedUserInfo.PartyKey = party.Key;
         res.JoinedUserInfo = req.JoinedUserInfo;
         res.JoinedParty = party;
-        res.State = 1;
+        res.State = SuccessState;
         
         DatabaseCenter.Instance.GetUserDb().UserHeaderMap.AddOrUpdate(res.JoinedUserInfo.AccountID, res.JoinedUserInfo);
         

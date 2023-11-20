@@ -16,14 +16,17 @@ public class FileFinder
             }
             return infos;
         }
-        public void ProcessSearchFile(RequestFileSearching req, MessageReceivedEventArgs e)
+        public void ProcessSearchFile(RequestFileSearching? req, MessageReceivedEventArgs e)
         {
             ResponseFileSearching res;
             if (req.SenderPartyKey.Equals(StringNullValue))
             {
-                res = new ResponseFileSearching(StringNullArray, e.Client.ID);
-                res.State = 0;
-                res.Log = "you need to create or join party.";
+                res = new ResponseFileSearching(
+                    StringNullArray,
+                    e.Client.ID,
+                    FailedState,
+                    "you need to create or join party.");
+
                 _ = new ServerEncryptedDtoWriter().SendMessage(e.Client, res, Tags.RESPONSE_FILE_SEARCHING);
                 return;
             }
@@ -37,8 +40,12 @@ public class FileFinder
                 FileInfo current = uploadedFileList[index];
                 fileNames[index] = current.Name;
             }
-            res = new ResponseFileSearching(fileNames, e.Client.ID);
-            res.State = 1;
+            res = new ResponseFileSearching(
+                fileNames,
+                e.Client.ID,
+                SuccessState,
+                "success");
+
             _ = new ServerEncryptedDtoWriter().SendMessage(e.Client, res, Tags.RESPONSE_FILE_SEARCHING);
         }
 }

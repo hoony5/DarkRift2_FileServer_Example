@@ -21,8 +21,11 @@
         DatabaseCenter.Instance.GetUserDb().UserHeaderMap.AddOrUpdate(createdParty.Leader.AccountID, createdParty.Leader);
         
         // Reply
-        ResponseCreateParty res = new ResponseCreateParty(createdParty, e.Client.ID);
-        res.State = 1;
+        ResponseCreateParty res = new ResponseCreateParty(createdParty,
+            e.Client.ID,
+            SuccessState,
+            $"{nameof(ProcessCreatePartyRequest)} :: Success");
+
         _ = new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_CREATE_PARTY);
         
         // Log

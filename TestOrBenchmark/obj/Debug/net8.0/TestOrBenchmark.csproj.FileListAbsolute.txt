@@ -1,0 +1,13 @@
+C:\Users\user\Desktop\MyWork\DarkRift2_FileServer_Example\TestOrBenchmark\bin\Debug\net8.0\TestOrBenchmark.deps.json
+C:\Users\user\Desktop\MyWork\DarkRift2_FileServer_Example\TestOrBenchmark\bin\Debug\net8.0\TestOrBenchmark.dll
+C:\Users\user\Desktop\MyWork\DarkRift2_FileServer_Example\TestOrBenchmark\bin\Debug\net8.0\TestOrBenchmark.pdb
+C:\Users\user\Desktop\MyWork\DarkRift2_FileServer_Example\TestOrBenchmark\obj\Debug\net8.0\TestOrBenchmark.csproj.AssemblyReference.cache
+C:\Users\user\Desktop\MyWork\DarkRift2_FileServer_Example\TestOrBenchmark\obj\Debug\net8.0\TestOrBenchmark.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\user\Desktop\MyWork\DarkRift2_FileServer_Example\TestOrBenchmark\obj\Debug\net8.0\TestOrBenchmark.AssemblyInfoInputs.cache
+C:\Users\user\Desktop\MyWork\DarkRift2_FileServer_Example\TestOrBenchmark\obj\Debug\net8.0\TestOrBenchmark.AssemblyInfo.cs
+C:\Users\user\Desktop\MyWork\DarkRift2_FileServer_Example\TestOrBenchmark\obj\Debug\net8.0\TestOrBenchmark.csproj.CoreCompileInputs.cache
+C:\Users\user\Desktop\MyWork\DarkRift2_FileServer_Example\TestOrBenchmark\obj\Debug\net8.0\TestOrBenchmark.sourcelink.json
+C:\Users\user\Desktop\MyWork\DarkRift2_FileServer_Example\TestOrBenchmark\obj\Debug\net8.0\TestOrBenchmark.dll
+C:\Users\user\Desktop\MyWork\DarkRift2_FileServer_Example\TestOrBenchmark\obj\Debug\net8.0\refint\TestOrBenchmark.dll
+C:\Users\user\Desktop\MyWork\DarkRift2_FileServer_Example\TestOrBenchmark\obj\Debug\net8.0\TestOrBenchmark.pdb
+C:\Users\user\Desktop\MyWork\DarkRift2_FileServer_Example\TestOrBenchmark\obj\Debug\net8.0\ref\TestOrBenchmark.dll

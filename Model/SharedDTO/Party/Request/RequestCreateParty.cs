@@ -1,33 +1,40 @@
-﻿[Serializable]
-[method:JsonConstructor]
-public class RequestCreateParty
-  (User leader,
+﻿using DarkRift;
+using Newtonsoft.Json;
+using static DtoValidator;
+using static SharedValue;
+
+[Serializable]
+public class RequestCreateParty : ServerRequestModelBase
+{
+  [JsonProperty(nameof(Leader))] public User Leader { get; private set; }
+  [JsonProperty(nameof(PartyName))] public string PartyName { get; private set; }
+  [JsonProperty(nameof(Password))] public string Password { get; private set; }
+  [JsonProperty(nameof(MaxPartyPlayers))] public ushort MaxPartyPlayers { get; private set; }
+  [JsonProperty(nameof(IsPublic))] public bool IsPublic { get; private set; }
+  [JsonProperty(nameof(SenderClientID))] public ushort SenderClientID { get; private set; }
+
+  public RequestCreateParty() : this(new User(new UserHeader(StringNullValue), StringNullValue, NumericNullValue),
+    StringNullValue, StringNullValue, NumericNullValue, false, NumericNullValue,
+    NumericNullValue, StringNullValue) { }
+
+  [JsonConstructor]
+  public RequestCreateParty(User leader,
     string partyName,
     string password,
     ushort maxPartyPlayers,
     bool isPublic,
-    ushort senderClientID)
-  : ServerRequestModelBase(leader.Header.AccountID)
-{
-  [JsonProperty(nameof(Leader))] public User Leader { get; private set; } = leader;
-  [JsonProperty(nameof(PartyName))] public string PartyName { get; private set; } = partyName;
-  [JsonProperty(nameof(Password))] public string Password { get; private set; } = password;
-  [JsonProperty(nameof(MaxPartyPlayers))] public ushort MaxPartyPlayers { get; private set; } = maxPartyPlayers;
-  [JsonProperty(nameof(IsPublic))] public bool IsPublic { get; private set; } = isPublic;
-  [JsonProperty(nameof(SenderClientID))] public ushort SenderClientID { get; private set; } = senderClientID;
-
-  public RequestCreateParty()
-    : this(
-      new User(new UserHeader(StringNullValue), StringNullValue, NumericNullValue),
-      StringNullValue,
-      StringNullValue,
-      NumericNullValue,
-      false,
-      NumericNullValue)
+    ushort senderClientID,
+    ushort state,
+    string log) : base(leader.Header.AccountID, state, log)
   {
-    
+    Leader = leader;
+    PartyName = partyName;
+    Password = password;
+    MaxPartyPlayers = maxPartyPlayers;
+    IsPublic = isPublic;
+    SenderClientID = senderClientID;
   }
-  
+
   public override void Serialize(SerializeEvent e)
   {
     base.Serialize(e);

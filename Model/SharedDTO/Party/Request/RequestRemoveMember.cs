@@ -1,24 +1,27 @@
-﻿[Serializable]
-[method: JsonConstructor]
-public class RequestRemoveMember
-    (UserHeader removedUserInfo, string partyName, ushort senderClientID) 
-    : ServerRequestModelBase(removedUserInfo.AccountID)
-{
-    [JsonProperty(nameof(RemovedUserInfo))]public UserHeader RemovedUserInfo { get; private set; } 
-        = removedUserInfo;
-    [JsonProperty(nameof(PartyName))] public string PartyName { get; private set; }
-        = partyName;
-    [JsonProperty(nameof(SenderClientID))] public ushort SenderClientID { get; private set; } 
-        = senderClientID;
+﻿using DarkRift;
+using Newtonsoft.Json;
+using static DtoValidator;
+using static SharedValue;
 
-    public RequestRemoveMember()
-        : this( 
-            new UserHeader(StringNullValue), 
-            StringNullValue, 
-            NumericNullValue)
+[Serializable]
+public class RequestRemoveMember : ServerRequestModelBase
+{
+    [JsonProperty(nameof(RemovedUserInfo))]public UserHeader RemovedUserInfo { get; private set; }
+    [JsonProperty(nameof(PartyName))] public string PartyName { get; private set; }
+    [JsonProperty(nameof(SenderClientID))] public ushort SenderClientID { get; private set; }
+
+    public RequestRemoveMember() : this(new UserHeader(StringNullValue), StringNullValue, NumericNullValue,
+        NumericNullValue, StringNullValue) { }
+
+    [JsonConstructor]
+    public RequestRemoveMember(UserHeader removedUserInfo, string partyName, ushort senderClientID,
+        ushort state, string log) : base(removedUserInfo.AccountID, state, log)
     {
-        
+        RemovedUserInfo = removedUserInfo;
+        PartyName = partyName;
+        SenderClientID = senderClientID;
     }
+
     public override void Serialize(SerializeEvent e)
     {
         base.Serialize(e);

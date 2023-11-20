@@ -1,12 +1,22 @@
-﻿
+﻿using DarkRift;
+using Newtonsoft.Json;
+using static DtoValidator;
+using static SharedValue;
+
 [Serializable]
-[method:JsonConstructor]
-public abstract class ServerRequestModelBase
-    (string id) : IDarkRiftSerializable 
+public abstract class ServerRequestModelBase : IDarkRiftSerializable
 {
-    public string ID { get; private set; } = id;
-    public ushort State { get; set; }
-    public string Log { get; set; } = SuccessResponse;
+    [JsonProperty(nameof(ID))]public string ID { get; private set; }
+    [JsonProperty(nameof(State))]public ushort State { get; set; }
+    [JsonProperty(nameof(Log))]public string Log { get; set; }
+
+    [JsonConstructor]
+    protected ServerRequestModelBase(string id, ushort state, string log)
+    {
+        ID = id;
+        State = state;
+        Log = string.IsNullOrEmpty(log) ? SuccessResponse : log;
+    }
     public virtual void Deserialize(DeserializeEvent e)
     {
         ID = e.Reader.ReadString();

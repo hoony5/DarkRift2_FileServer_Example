@@ -3,11 +3,14 @@
     private const int LEADER_COUNT = 1;
     public void ProcessExitPartyRequest(RequestExitParty? req, MessageReceivedEventArgs e)
     {
-        ResponseExitParty res = new ResponseExitParty(e.Client.ID);
+        ResponseExitParty res = new ResponseExitParty()
+        {
+            ClientID   = e.Client.ID
+        };
         
         if (!DatabaseCenter.Instance.GetPartyDb().PartyMap.TryGetValue(req.PartyName, out Party? party))
         {
-            res.State = 0;
+            res.State = FailedState;
             res.Log = $"There is no party named {req.PartyName}";
             _ = new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_EXIT_PARTY);
             return;
@@ -22,7 +25,7 @@
              FileServer.DebugLog($@"
 [Exit Party]
     - member              : {req.DepartedUser.AccountID}");
-             res.State = 1;
+             res.State = SuccessState;
              res.DepartedUser = req.DepartedUser;
              res.PartyName = req.PartyName;
              
@@ -49,7 +52,7 @@
             // then remove the member from the party
             party.Members.Remove(member.AccountID);
             party.CurrentPlayers = LEADER_COUNT + party.Members.Count;
-            res.State = 1;
+            res.State = SuccessState;
             res.DepartedUser = req.DepartedUser;
             res.PartyName = req.PartyName;
             _ = new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_EXIT_PARTY);
@@ -62,8 +65,8 @@
             return;
         }
 
-        // TODO:: Delete All Files
-        
+        // delete the party when the user is my party leader and there is no member
+        new DeleteFileProcessor().RemovePartyUploadedFiles(party.Key);
         // Remove Party
         DatabaseCenter.Instance.GetPartyDb().PartyMap.Remove(req.PartyName);
     }

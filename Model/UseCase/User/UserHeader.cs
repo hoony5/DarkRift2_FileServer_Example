@@ -1,15 +1,26 @@
-﻿[System.Serializable]
-[method: JsonConstructor]
-public class UserHeader(string accountID) : IDarkRiftSerializable
+﻿using DarkRift;
+using Newtonsoft.Json;
+using static DtoValidator;
+using static SharedValue;
+
+[System.Serializable]
+public class UserHeader : IDarkRiftSerializable
 {
-    [JsonProperty(nameof(AccountID))]public string AccountID { get; private set; } = accountID;
-    [JsonProperty(nameof(NickName))]public string NickName { get; set; } = StringNullValue;
-    [JsonProperty(nameof(PartyKey))]public string PartyKey { get; set; } = StringNullValue;
+    [JsonProperty(nameof(AccountID))]public string AccountID { get; private set; }
+    [JsonProperty(nameof(NickName))]public string NickName { get; set; }
+    [JsonProperty(nameof(PartyKey))]public string PartyKey { get; set; }
     [JsonProperty(nameof(ConnectionState))]public ushort ConnectionState { get; set; }
 
     public UserHeader() : this(StringNullValue)
     {
-        
+         NickName = StringNullValue;
+         PartyKey = StringNullValue;
+    }
+
+    [JsonConstructor]
+    public UserHeader(string accountID)
+    {
+        AccountID = accountID;
     }
 
     public void Deserialize(DeserializeEvent e)

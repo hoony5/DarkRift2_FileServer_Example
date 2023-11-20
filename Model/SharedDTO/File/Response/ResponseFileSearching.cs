@@ -1,8 +1,20 @@
-﻿[Serializable]
-[method: JsonConstructor]
-public class ResponseFileSearching(string[] fileFullNames, ushort clientID) : ServerResponseModelBase(clientID)
+﻿using DarkRift;
+using Newtonsoft.Json;
+using static DtoValidator;
+using static SharedValue;
+
+[Serializable]
+public class ResponseFileSearching : ServerResponseModelBase
 {
-    [JsonProperty(nameof(FileFullNames))] public string[] FileFullNames { get; private set; } = fileFullNames;
+    [JsonProperty(nameof(FileFullNames))] public string[] FileFullNames { get; private set; }
+    [JsonConstructor]
+    public ResponseFileSearching(string[] fileFullNames, ushort clientID, ushort state, string log) : base(clientID, state, log)
+    {
+        FileFullNames = fileFullNames;
+    }
+    public ResponseFileSearching() : this(new string[0], NumericNullValue, NumericNullValue, SuccessResponse)
+    {
+    }
     public override void Deserialize(DeserializeEvent e)
     {
         base.Deserialize(e);

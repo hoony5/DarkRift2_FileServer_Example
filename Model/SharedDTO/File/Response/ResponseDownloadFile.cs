@@ -1,9 +1,18 @@
-﻿[Serializable]
-[method:JsonConstructor]
-public class ResponseDownloadFile(ushort clientID, FileSegment segment) : ServerResponseModelBase(clientID)
+﻿using Newtonsoft.Json;
+using DarkRift;
+using static DtoValidator;
+using static SharedValue;
+[Serializable]
+public class ResponseDownloadFile : ServerResponseModelBase
 {
-    [JsonProperty(nameof(Segment))] public FileSegment Segment { get; private set; } = segment;
-    
+    [JsonProperty(nameof(Segment))] public FileSegment Segment { get; set; }
+    [JsonConstructor]
+    public ResponseDownloadFile(ushort clientID, ushort state, string log) : base(clientID, state, log){ }
+
+    public ResponseDownloadFile() : this(NumericNullValue, NumericNullValue, StringNullValue)
+    {
+        Segment = new FileSegment();
+    }
     public override void Deserialize(DeserializeEvent e)
     {
         base.Deserialize(e);

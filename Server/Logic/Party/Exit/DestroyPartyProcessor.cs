@@ -2,11 +2,14 @@
 {
     public void ProcessDestroyPartyRequest(RequestDestroyParty? req, MessageReceivedEventArgs e)
     {
-        ResponseDestroyParty res = new ResponseDestroyParty(e.Client.ID);       
+        ResponseDestroyParty res = new ResponseDestroyParty()
+        {
+            ClientID   = e.Client.ID
+        };    
         
         if (!DatabaseCenter.Instance.GetPartyDb().PartyMap.TryGetValue(req.PartyName, out Party? party))
         {
-            res.State = 0;
+            res.State = FailedState;
             res.Log = $"There is no party named {res.PartyName}";
             _ = new ServerWriter().SendMessage(e.Client, res, Tags.RESPONSE_DESTROY_PARTY);
             return;
@@ -17,14 +20,14 @@
         
         if(leader is null)
         {
-            res.State = 0;
+            res.State = FailedState;
             res.Log = $"There is no leader named {party.Leader.AccountID}";
             return;
         }
         
         leader.PartyKey = StringNullValue;
         
-        res.State = 1;
+        res.State = SuccessState;
         res.PartyName = req.PartyName;
         if(party.Members.Count is 0)
         {
@@ -45,7 +48,7 @@
     - Leader              : {party?.Leader.AccountID}");
         
         // Delete AllFiles
-        
+        new DeleteFileProcessor().RemovePartyUploadedFiles(party.Key);
         // Remove Party
         DatabaseCenter.Instance.GetPartyDb().PartyMap.Remove(res.PartyName);
     }

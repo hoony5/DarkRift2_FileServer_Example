@@ -57,7 +57,7 @@ public class UploadedFileManagement(IDictionary<string, NetworkCacheData<FileSeg
         value.AddOrUpdate(fileName, segmentsInfo);
     }
     
-    private void RemoveUploadFiles(string partyKey)
+    public void RemoveUploadFiles(string partyKey)
     {
         if (!uploadedFiles.ContainsKey(partyKey)) return;
         uploadedFiles.Remove(partyKey);

@@ -1,14 +1,23 @@
-﻿[System.Serializable]
-[method:JsonConstructor]
-public class Party(
-    string name,
-    string password,
-    string key,
-    int maxPlayers,
-    ushort state,
-    UserHeader leader) 
-    : IDarkRiftSerializable
+﻿using DarkRift;
+using Newtonsoft.Json;
+using static DtoValidator;
+using static SharedValue;
+
+[System.Serializable]
+public class Party : IDarkRiftSerializable
 {
+    private const int LEADER_COUNT = 1;
+    [JsonProperty(nameof(Name))] public string Name { get; private set; }
+    [JsonProperty(nameof(Password))] public string Password { get; private set; }
+    [JsonProperty(nameof(Key))] public string Key { get; private set; }
+    [JsonProperty(nameof(CurrentPlayers))] public int CurrentPlayers { get; set; }
+    [JsonProperty(nameof(MaxPlayers))] public int MaxPlayers { get; private set; }
+    [JsonProperty(nameof(State))] public ushort State { get; private set; }
+    [JsonProperty(nameof(HistoryQueue))] public Queue<string> HistoryQueue { get; private set; }
+    [JsonProperty(nameof(Leader))] public UserHeader Leader { get; set; }
+    [JsonProperty(nameof(Members))] public Dictionary<string, UserHeader> Members { get; private set; } 
+    [JsonProperty(nameof(ServerID))] public ushort ServerID { get; set; }
+
     public Party() : this(
         StringNullValue,
         StringNullValue,
@@ -21,18 +30,21 @@ public class Party(
         HistoryQueue = new Queue<string>(16);
     }
 
-    private const int LEADER_COUNT = 1;
-    [JsonProperty(nameof(Name))] public string Name { get; private set; } = name;
-    [JsonProperty(nameof(Password))] public string Password { get; private set; } = password;
-    [JsonProperty(nameof(Key))] public string Key { get; private set; } = key;
-    [JsonProperty(nameof(CurrentPlayers))] public int CurrentPlayers { get; set; }
-    [JsonProperty(nameof(MaxPlayers))] public int MaxPlayers { get; private set; } = maxPlayers;
-    [JsonProperty(nameof(State))] public ushort State { get; private set; } = state;
-    [JsonProperty(nameof(HistoryQueue))] public Queue<string> HistoryQueue { get; private set; }
-    [JsonProperty(nameof(Leader))] public UserHeader Leader { get; set; } = leader;
-    [JsonProperty(nameof(Members))] public Dictionary<string, UserHeader> Members { get; private set; } 
-    [JsonProperty(nameof(ServerID))] public ushort ServerID { get; set; }
-    
+    [JsonConstructor]
+    public Party(string name,
+        string password,
+        string key,
+        int maxPlayers,
+        ushort state,
+        UserHeader leader)
+    {
+        Name = name;
+        Password = password;
+        Key = key;
+        MaxPlayers = maxPlayers;
+        State = state;
+        Leader = leader;
+    }
     public void AddOrUpdateMember(UserHeader member)
     {
         if (Members.ContainsKey(member.AccountID))

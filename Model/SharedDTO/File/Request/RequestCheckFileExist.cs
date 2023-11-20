@@ -1,18 +1,33 @@
-﻿[Serializable]
-[method:JsonConstructor]
-public class RequestCheckFileExist(
-        ushort senderClientID,
+﻿using DarkRift;
+using Newtonsoft.Json;
+using static DtoValidator;
+using static SharedValue;
+
+[Serializable]
+public class RequestCheckFileExist : ServerRequestModelBase
+{
+    [JsonProperty(nameof(SenderClientID))] public ushort SenderClientID { get; private set; }
+    [JsonProperty(nameof(SenderPartyKey))] public string SenderPartyKey { get; private set; }
+    [JsonProperty(nameof(FileNameWithoutExtension))] public string FileNameWithoutExtension { get; private set; }
+    [JsonProperty(nameof(FileExtension))] public string FileExtension { get; private set; }
+
+    [JsonConstructor]
+    public RequestCheckFileExist(ushort senderClientID,
         string senderPartyKey,
         string fileNameWithoutExtension,
         string fileExtension,
-        string id) 
-    : ServerRequestModelBase(id)
-{
-    [JsonProperty(nameof(SenderClientID))] public ushort SenderClientID { get; private set; } = senderClientID;
-    [JsonProperty(nameof(SenderPartyKey))] public string SenderPartyKey { get; private set; } = senderPartyKey;
-    [JsonProperty(nameof(FileNameWithoutExtension))] public string FileNameWithoutExtension { get; private set; } = fileNameWithoutExtension;
-    [JsonProperty(nameof(FileExtension))] public string FileExtension { get; private set; } = fileExtension;
-
+        string id,
+        ushort state,
+        string log) : base(id, state, log)
+    {
+        SenderClientID = senderClientID;
+        SenderPartyKey = senderPartyKey;
+        FileNameWithoutExtension = fileNameWithoutExtension;
+        FileExtension = fileExtension;
+    }
+    public RequestCheckFileExist()
+        : this(NumericNullValue, StringNullValue, StringNullValue,
+            StringNullValue, StringNullValue, NumericNullValue, SuccessResponse) { }
     public override void Deserialize(DeserializeEvent e)
     {
         base.Deserialize(e);

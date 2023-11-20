@@ -1,8 +1,20 @@
-﻿[Serializable]
-[method:JsonConstructor]
-public class ResponsePartySearching(ushort clientID) : ServerResponseModelBase(clientID)
+﻿using DarkRift;
+using Newtonsoft.Json;
+using static DtoValidator;
+using static SharedValue;
+
+[Serializable]
+public class ResponsePartySearching : ServerResponseModelBase
 {
-    [JsonProperty(nameof(SearchingPartyArray))] public Party[] SearchingPartyArray { get; set; } 
+    [JsonProperty(nameof(SearchingPartyArray))] public Party[] SearchingPartyArray { get; set; }
+
+    [JsonConstructor]
+    public ResponsePartySearching(Party[] searchingPartyArray, ushort clientID, ushort state, string log)
+        : base(clientID, state, log)
+    {
+        SearchingPartyArray = searchingPartyArray;
+    }
+    public ResponsePartySearching() : this(new []{new Party()}, NumericNullValue, NumericNullValue, StringNullValue) { }
 
     public override void Serialize(SerializeEvent e)
     {

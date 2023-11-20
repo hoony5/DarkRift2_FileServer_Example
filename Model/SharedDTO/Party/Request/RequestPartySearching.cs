@@ -1,19 +1,27 @@
-﻿[Serializable]
-[method:JsonConstructor]
-public class RequestPartySearching(string keyword, ushort senderClientID, string id)
-    : ServerRequestModelBase(id)
-{
-    [JsonProperty(nameof(Keyword))]public string Keyword { get; private set; } = keyword;
-    [JsonProperty(nameof(SenderClientID))]public ushort SenderClientID { get; private set; } = senderClientID;
+﻿using DarkRift;
+using Newtonsoft.Json;
+using static DtoValidator;
+using static SharedValue;
 
-    public RequestPartySearching()
-        : this(
-            StringNullValue,
-            NumericNullValue,
-            StringNullValue)
+[Serializable]
+public class RequestPartySearching : ServerRequestModelBase
+{
+    [JsonProperty(nameof(Keyword))]public string Keyword { get; private set; }
+    [JsonProperty(nameof(SenderClientID))]public ushort SenderClientID { get; private set; }
+
+    public RequestPartySearching() : this(StringNullValue, NumericNullValue, StringNullValue,
+        NumericNullValue, SuccessResponse) { }
+
+    [JsonConstructor]
+    public RequestPartySearching(string keyword, ushort senderClientID, string id, ushort state, string log)
+        : base(id, state, log)
     {
-        
+        Keyword = keyword;
+        SenderClientID = senderClientID;
     }
+
+    public static RequestPartySearching Instance { get; } = new();
+
     public override void Serialize(SerializeEvent e)
     {
         base.Serialize(e);

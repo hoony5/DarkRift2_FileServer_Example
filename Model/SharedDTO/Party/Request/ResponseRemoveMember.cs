@@ -1,9 +1,24 @@
-﻿[Serializable]
-[method: JsonConstructor]
-public class ResponseRemoveMember(ushort clientID) : ServerResponseModelBase(clientID)
+﻿using DarkRift;
+using Newtonsoft.Json;
+using static DtoValidator;
+using static SharedValue;
+
+[Serializable]
+public class ResponseRemoveMember : ServerResponseModelBase
 {
     [JsonProperty(nameof(RemovedUserInfo))]public UserHeader RemovedUserInfo { get; set; }
     [JsonProperty(nameof(PartyName))] public string PartyName { get; set; }
+
+    [JsonConstructor]
+    public ResponseRemoveMember(UserHeader removedUserInfo, string partyName, ushort clientID, ushort state, string log)
+        : base(clientID, state, log)
+    {
+        RemovedUserInfo = removedUserInfo;
+        PartyName = partyName;
+    }
+
+    public ResponseRemoveMember() : this(new UserHeader(), StringNullValue, NumericNullValue,
+        NumericNullValue, StringNullValue) { }
 
     public override void Serialize(SerializeEvent e)
     {

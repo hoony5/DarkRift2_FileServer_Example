@@ -1,10 +1,21 @@
-﻿[Serializable]
-public abstract class ServerResponseModelBase(ushort clientID) : IDarkRiftSerializable 
-{
-    public ushort ClientID { get; private set; } = clientID;
-    public ushort State { get; set; }
-    public string Log { get; set; } = SuccessResponse;
+﻿using DarkRift;
+using Newtonsoft.Json;
+using static SharedValue;
 
+[Serializable]
+public abstract class ServerResponseModelBase : IDarkRiftSerializable
+{
+    [JsonProperty(nameof(ClientID))]public ushort ClientID { get; set; }
+    [JsonProperty(nameof(State))]public ushort State { get; set; }
+    [JsonProperty(nameof(Log))]public string Log { get; set; }
+
+    [JsonConstructor]
+    protected ServerResponseModelBase(ushort clientID, ushort state, string log)
+    {
+        ClientID = clientID;
+        State = state;
+        Log = string.IsNullOrEmpty(log) ? SuccessResponse : log;
+    }
     public virtual void Deserialize(DeserializeEvent e)
     {
         ClientID = e.Reader.ReadUInt16();

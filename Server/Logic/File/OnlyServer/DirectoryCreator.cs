@@ -5,7 +5,7 @@ public class DirectoryCreator
     {
         string finalPath 
             = Path.Combine(
-                FilePathManagement.GetSharedFilePath(),
+                FilePathManagement.GetSharedFileRootPath(),
                 SharedFileFolderName,key);
         
         if (Directory.Exists(finalPath)) return finalPath;

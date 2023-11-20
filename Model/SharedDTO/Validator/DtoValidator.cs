@@ -1,3 +1,5 @@
+using static SharedValue;
+
 using System.Text;
 public static class DtoValidator
 {

@@ -48,66 +48,70 @@ public class ServerEncryptedDtoReader
                         new DestroyPartyProcessor().ProcessDestroyPartyRequest(
                             encryptedData.AesDecrypt<RequestDestroyParty>(), e);
                         break;
-
                     #endregion
 
                     #region Processing Upload File
-
                     case Tags.REQUEST_UPLOAD_ACCEPT:
+                        new UploadFileProcessor().ProcessRequestUploadFile(
+                            encryptedData.AesDecrypt<RequestUploadAccept>(), e);
                         break;
                     case Tags.REQUEST_UPLOAD_FILE:
+                        new UploadFileProcessor().ProcessUploadFile(encryptedData.AesDecrypt<RequestUploadFile>(), e);
                         break;
-
                     #endregion
 
                     #region Processing Download File
-
                     case Tags.REQUEST_DOWNLOAD_ACCEPT:
+                        new DownloadFileProcessor().ProcessRequestDownloadFile(
+                            encryptedData.AesDecrypt<RequestDownloadAccept>(), e);
                         break;
                     case Tags.REQUEST_DOWNLOAD_FILE:
+                        new DownloadFileProcessor().ProcessDownloadFile(
+                            encryptedData.AesDecrypt<RequestDownloadFile>(), e);
                         break;
-
                     #endregion
 
                     #region Processing Search File
-
                     case Tags.REQUEST_FILE_SEARCHING:
+                        new FileFinder().ProcessSearchFile(encryptedData.AesDecrypt<RequestFileSearching>(), e);
                         break;
-
                     #endregion
 
                     #region Processing Delete File
-
                     case Tags.REQUEST_DELETE_ALL_FILES:
+                        new DeleteFileProcessor().ProcessDeleteFiles(encryptedData.AesDecrypt<RequestDeleteAllFiles>(),
+                            e);
                         break;
-
                     #endregion
 
                     #region Processing Advertise Done File upload
 
                     case Tags.REQUEST_ADVERTISE_UPLOAD_COMPLETION:
+                        new AdvertisementProcessor().ProcessAdvertisement(
+                            encryptedData.AesDecrypt<RequestAdvertiseUploadCompletion>(), e);
                         break;
-
                     #endregion
 
                     #region Processing File Share
-
                     case Tags.REQUEST_FILE_SHARE_START:
                         break;
                     case Tags.REQUEST_UPDATE_FILE_SHARE_PROGRESS:
                         break;
                     case Tags.REQUEST_FILE_CURRENT_SHARED_PROGRESS:
                         break;
-
                     #endregion
 
                     #region Processing File Share End
-
                     case Tags.REQUEST_FILE_SHARE_END:
                         break;
-
                     #endregion
 
+                    #region Processing Unformatted Message
+                    case Tags.REQUEST_UNFORMATTED_MESSAGE:
+                        new UnformattedMessageProcessor().ProcessUnformattedMessage(
+                            encryptedData.AesDecrypt<RequestUnformattedMessage>(), e);
+                        break;
+                    #endregion
                     default:
                         FileServer.DebugLog(
                             $"Recv Tag : {(Tags)e.Tag} | Current Server Version is not supported the tag.");
